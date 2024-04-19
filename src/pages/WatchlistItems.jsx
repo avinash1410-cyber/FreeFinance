@@ -6,7 +6,9 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import Navbar from '../components/Navbar';
+import ProtectedPage from "../views/ProtectedPage";
+import Navbar from "../components/Navbar";
+import Announcement from "../components/Announcement";
 
 
 const Info = styled.div`
@@ -19,7 +21,7 @@ const Info = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   z-index: 3;
   display: flex;
-  align-items: center;
+  align-stockss: center;
   justify-content: center;
   transition: all 0.5s ease;
   cursor: pointer;
@@ -31,7 +33,7 @@ const Container = styled.div`
   min-width: 280px;
   height: 350px;
   display: flex;
-  align-items: center;
+  align-stockss: center;
   justify-content: center;
   background-color: #f5fbfd;
   position: relative;
@@ -60,7 +62,7 @@ const Icon = styled.div`
   border-radius: 50%;
   background-color: white;
   display: flex;
-  align-items: center;
+  align-stockss: center;
   justify-content: center;
   margin: 10px;
   transition: all 0.5s ease;
@@ -70,24 +72,12 @@ const Icon = styled.div`
   }
 `;
 
-export default function CartItems({item}) {
+export default function WatchlistItems({stock}) {
   return (
-<>
-    <Container>
-    <Circle />
-    <Image src={`http://bishellapi.herokuapp.com${item.product === null ? 'loading' : item.product.image}`} alt="Product Image"/>
-    <Info>
-      <Icon>
-        <ShoppingCartOutlined />
-      </Icon>
-      <Icon>
-        <SearchOutlined />
-      </Icon>
-      <Icon>
-      <Link to={`/product/${item.id}`}> <LocalShipping /></Link>
-      </Icon>
-    </Info>
-  </Container>
-  </>
+    <div>
+      <p>Name: {stock.name}</p>
+      <p>Price: {stock.price}</p>
+      <p>Market Cap: {stock.market_cap}</p>
+    </div>
   )
 }

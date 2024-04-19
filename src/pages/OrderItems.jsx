@@ -6,6 +6,9 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import ProtectedPage from "../views/ProtectedPage";
+import Navbar from "../components/Navbar";
+import Announcement from "../components/Announcement";
 
 
 const Info = styled.div`
@@ -73,6 +76,9 @@ export default function OrderItems({item}) {
   return (
 
 <>
+    <ProtectedPage/>
+    <Announcement />
+    <Navbar />
     <Container>
     <Circle />
     <Image src={`http://bishellapi.herokuapp.com${item.product === null ? 'loading' : item.product.image}`} alt="Product Image"/>

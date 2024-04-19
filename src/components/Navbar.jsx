@@ -1,5 +1,5 @@
 import { Badge, Button } from "@material-ui/core";
-import { Search, ShoppingCartOutlined,AccountCircleOutlined, Dashboard } from "@material-ui/icons";
+import { TrendingUp,AddShoppingCart, AccountBalanceWallet,AccountCircleOutlined, Dashboard } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import {
@@ -78,8 +78,26 @@ const MenuItem = styled.div`
   font-size: 14px;
   cursor: pointer;
   margin-left: 25px;
+  position: relative;
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
+
+  &:hover::after {
+    content: "${({ tooltipText }) => tooltipText}"; /* Use a dynamic tooltip text */
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 10;
+    width: max-content;
+    white-space: nowrap;
+  }
 `;
+
+
 
 const Image = styled.img`
   width: 30px;
@@ -127,19 +145,37 @@ const Navbar = () => {
           <Link to="/"><Logo>Social-trading</Logo></Link>
         </Center>
         <Right>
-          <MenuItem>
-          <Link to="/cart"><Badge color="primary">
-              <Dashboard />
+          <MenuItem tooltipText="Watchlist">
+          <Link to="/watchlist"><Badge color="primary">
+              <AddShoppingCart />
             </Badge>
           </Link>
           </MenuItem>
 
-          <MenuItem>
-          <Link to="/artist"><Badge badgeContent={'traders'} color="primary">
+          <MenuItem tooltipText="Trader">
+          <Link to="/trader"><Badge  color="primary">
               <AccountCircleOutlined />
             </Badge>
           </Link> 
           </MenuItem>
+
+
+
+          <MenuItem tooltipText="Stocks">
+          <Link to="/stocks"><Badge color="primary">
+              <TrendingUp />
+            </Badge>
+          </Link> 
+          </MenuItem>
+
+          
+          <MenuItem tooltipText="Portfolio">
+          <Link to="/portfolio"><Badge color="primary">
+              <AccountBalanceWallet />
+            </Badge>
+          </Link> 
+          </MenuItem>
+ 
         </Right>
       </Wrapper>
     </Container>

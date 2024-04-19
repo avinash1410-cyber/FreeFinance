@@ -4,27 +4,22 @@ import {
   Route,
 } from "react-router-dom";
 
-import ViewProduct from "./pages/ViewProduct";
+import ViewStock from "./pages/ViewStock";
 import Home from "./pages/Home";
-import ProductList from "./pages/ProductList";
+import StockList from "./pages/StockList";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Cart from "./pages/Cart";
-import Categories from "./components/Categories";
-import CategoryProduct from "./components/CategoryProduct";
-import SearchProduct from "./components/SearchProduct";
-import Order from "./pages/Order";
-import ArtistPage from "./components/ArtistPage";
-import Upload from "./components/ArtistPage";
-import Designs from "./components/Designs";
-
+import Watchlist from "./pages/Watchlist";
+import TraderPage from "./pages/TraderPage";
 import { AuthProvider } from "./context/AuthContext";
 //import Home from "./views/homePage";
 //import Login from "./views/loginPage";
 //import Register from "./views/registerPage";
 import ProtectedPage from "./views/ProtectedPage";
 import { PaytmButton } from "./components/PaytmButton";
-
+import ArtistProfile from "./pages/TraderProfile";
+import Portfolio from "./pages/Portfolio";
+import MyComponent from "./pages/Test";
 
 
 const App = () => {
@@ -39,20 +34,18 @@ const App = () => {
     <Routes> 
       <Route path="/protected" element={<ProtectedPage/>}/>   
       <Route path="/" element={<Home/>} />
-      <Route path="search/:id" element={<SearchProduct/>} />
+      {/* <Route path="search/:id" element={<SearchProduct/>} /> */}
       <Route path="login/" element={<Login />} />
-      <Route path="watchlist/" element={<Cart />} />
-      <Route path="add_to_watchlist/" element={<Cart />} />
-      <Route path="sell_stock/" element={<Order />} />
-      <Route path="buy_stock/" element={<ArtistPage />} />
-      <Route path="update/" element={<Upload />} />
+      <Route path="watchlist/" element={<Watchlist />} />
+      <Route path="stocks/" element={<StockList />} />
+      <Route path="stocks/:id" element={<ViewStock />} />
+
+      <Route path="portfolio/" element={<Portfolio />} />
+
+      <Route path="trader/" element={<TraderPage />} />
+      <Route path="trader/:id" element={<ArtistProfile />} />
       <Route path="register/" element={<Register />} />
-      <Route path="product/:id" element={<ViewProduct/>} />
-      <Route path="stocks/" element={<ProductList />} />
-      <Route path="category/" element={<Categories />} />
-      <Route path="category/:id" element={<CategoryProduct />} />
-      <Route path="designs/" element={<Designs/>} />
-      <Route path="pay/:id" element={<PaytmButton/>} />
+      <Route path="test/" element={<MyComponent />} />
     </Routes>
 
     </AuthProvider>

@@ -1,18 +1,20 @@
 import {React,useState,useEffect,useContext} from 'react'
 import useAxios from '../utils/useAxios';
 import styled from "styled-components";
-import Navbar from '../components/Navbar';
+import ProtectedPage from "../views/ProtectedPage";
+import Navbar from "../components/Navbar";
+import Announcement from "../components/Announcement";
 
 
 
 
-export default function ArtistPage() {
+export default function TraderPage() {
   const api=useAxios();
-  const [Artists, setArtists] = useState([]);
+  const [Traders, setTraders] = useState([]);
 
   useEffect(() => {
     async function fetchData(){
-      fetch('http://127.0.0.1:8000/artist/', {
+      fetch('http://127.0.0.1:8000/trader/', {
         // mode: 'no-cors',
         method: 'GET',
         headers: {
@@ -23,7 +25,7 @@ export default function ArtistPage() {
         if (response.ok) {
           response.json().then(json => {
             console.log(json);
-            setArtists(json)
+            setTraders(json)
           });
         }
       });   
@@ -33,16 +35,18 @@ export default function ArtistPage() {
 
   return (
     <div>
-      <center><Navbar></Navbar></center>
+      <ProtectedPage/>
+      <Announcement />
+      <Navbar />
+      
       <h1><center>Here is The list of our super Traders</center></h1>
-      {Artists.length > 0 && (
+      {Traders.length > 0 && (
         <ul>
-          {Artists.map(Artist => (
-            <li key={Artist.id}>{Artist.cust.user.username}</li>
+          {Traders.map(Trader => (
+            <li key={Trader.id}>{Trader.cust.user.username}</li>
           ))}
         </ul>
       )}
-      Daily,weekly,monthly,yearly
     </div>
   );
 
