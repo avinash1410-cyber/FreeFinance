@@ -192,7 +192,7 @@ def withdrawBalance(request,pk=None):
     return Response({}, status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST','GET'])
+@api_view(['POST',])
 @permission_classes([IsAuthenticated])
 def buyStock(request,pk=None):
     if request.method == 'POST':
@@ -218,22 +218,22 @@ def buyStock(request,pk=None):
                 cust=cust,
                 stock=stock,
             )
-        data = f'Congratulation you have bought {quantity} no of stocks of {stock.name}'
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'GET':
-        return Response({'amount':'','stock_id':''}, status=status.HTTP_200_OK)
+        # data = f'Congratulation you have bought {quantity} no of stocks of {stock.name}'
+        data="Successful"
+        return Response({'message': data}, status=status.HTTP_200_OK)
+    # elif request.method == 'GET':
+    #     return Response({'amount':'','stock_id':''}, status=status.HTTP_200_OK)
     return Response({"message":"Request Not allowed"}, status.HTTP_400_BAD_REQUEST)
 
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST',])
 @permission_classes([IsAuthenticated])
 def sellStock(request,pk=None,id=None):
-    if request.method == 'GET':
-        return Response({'quantity':'','stock_id':'','price':'Not necessary'}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
+    # if request.method == 'GET':
+    #     return Response({'quantity':'','stock_id':''}, status=status.HTTP_200_OK)
+    if request.method == 'POST':
         quantity=int(request.data["quantity"])
-        price=request.data["price"]
         stock_id=request.data["stock_id"]
         cust=Customer.objects.get(user=request.user)
         stock=Stock.objects.get(id=stock_id)
@@ -255,8 +255,8 @@ def sellStock(request,pk=None,id=None):
             order.quantity=new_quantity
             order.save()
         company=stock.name
-        text=f"Congratulations u have sell {quantity} no of stock of {company} stocks !!!"
-        data = f'{text}'
+        # text=f"Congratulations u have sell {quantity} no of stock of {company} stocks !!!"
+        data="Successful"
         return Response({'message': data}, status=status.HTTP_200_OK)
     return Response({"message":"Request Not allowed"}, status.HTTP_400_BAD_REQUEST)
 
@@ -347,12 +347,37 @@ def HiresList(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'POST'])
+
+
+
+
+
+
+
+@api_view(['POST',])
+@permission_classes([IsAuthenticated])
+def createWatchlist(request):
+    name=request.data['name']
+    print(name)
+    cust = Customer.objects.get(user=request.user)            
+    try:
+        watchlist=Watchlist.objects.get(name=name,cust=cust)
+        return Response({'message': 'Watchlist With Same Name Already Present'}, status=status.HTTP_201_CREATED)
+    except Watchlist.DoesNotExist:
+        watchlist = Watchlist.objects.create(name=name,cust=cust)
+        return Response({'message': 'Watchlist Created'}, status=status.HTTP_201_CREATED)
+
+
+
+
+
+
+@api_view(['POST',])
 @permission_classes([IsAuthenticated])
 def addToWatchlist(request,id=None):
-    if request.method == 'GET':
-        return Response({'stock_id':'','name':''}, status=status.HTTP_400_BAD_REQUEST)    
-    elif request.method == 'POST':
+    # if request.method == 'GET':
+    #     return Response({'stock_id':'','name':''}, status=status.HTTP_400_BAD_REQUEST)    
+    if request.method == 'POST':
         try:
             # Get the Stock and User objects
             stock_id=int(request.data['stock_id'])

@@ -14,6 +14,7 @@ urlpatterns = [
     path('my_watchlist/', myWatchlist),
     path('my_watchlist/<int:pk>/', myWatchlist),
     path('my_stocks/', myStock),
+    path('create_watchlist/', createWatchlist),
     path('add_to_watchlist/', addToWatchlist),
     # path('sell_options/', sellOption),
     # path('buy_options/', buyOption),
