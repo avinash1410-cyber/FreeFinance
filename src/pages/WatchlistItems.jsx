@@ -1,15 +1,6 @@
 import React from 'react';
-import {
-  SearchOutlined,
-  LocalShipping,
-  ShoppingCartOutlined,
-} from "@material-ui/icons";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import ProtectedPage from "../views/ProtectedPage";
-import Navbar from "../components/Navbar";
-import Announcement from "../components/Announcement";
 
+import styled from "styled-components";
 
 const Info = styled.div`
   opacity: 0;

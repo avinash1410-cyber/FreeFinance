@@ -1,0 +1,24 @@
+<div>
+        <Button variant="contained" color="primary" onClick={handleOpen}>
+          Create Watchlist
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Create Watchlist</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Watchlist Name"
+              variant="outlined"
+              value={inputValue}
+              onChange={handleInputChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAction} color="primary" disabled={!inputValue.trim() || loading}>
+              {loading ? <CircularProgress size={24} /> : 'Create'}
+            </Button>
+            <Button onClick={handleClose} color="secondary" disabled={loading}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>

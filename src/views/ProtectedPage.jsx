@@ -23,9 +23,7 @@ function ProtectedPage() {
   }, []);
 
   return (
-    <h2>
       <p>{res}</p>
-    </h2>
   );
 }
 

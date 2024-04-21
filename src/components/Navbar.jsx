@@ -1,5 +1,13 @@
-import { Badge, Button } from "@material-ui/core";
-import { TrendingUp,AddShoppingCart, AccountBalanceWallet,AccountCircleOutlined, Dashboard } from "@material-ui/icons";
+import { Badge, Button,Switch } from "@material-ui/core";
+
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+
+
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import {
@@ -7,10 +15,10 @@ import {
 } from "react-router-dom";
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-
+import useApiRequest from "./useApiRequest";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -107,21 +115,31 @@ const Image = styled.img`
 `;
 
 
-const Navbar = () => {
 
+
+
+
+
+const Navbar = () => {
 
 
   const { logoutUser } = useContext(AuthContext);
   const [i, setSearch] = useState();
   const[Product, setProduct]=useState();
-  const nav = useNavigate();
+  const navigate = useNavigate();
+  const { hitRequest } = useApiRequest();
 
 
-  const handleSubmit = async e => {
-    console.log(i);
-   nav(`/search/${i}`); 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await hitRequest('http://127.0.0.1:8000/account/update/', 'GET',() => navigate('/trader'));
+      console.log(data.message);
+    } catch (error) {
+      console.error('Error updating account:', error);
+    }
   };
-
+    
 
 
 
@@ -147,14 +165,14 @@ const Navbar = () => {
         <Right>
           <MenuItem tooltipText="Watchlist">
           <Link to="/watchlist"><Badge color="primary">
-              <AddShoppingCart />
+              <AddShoppingCartIcon />
             </Badge>
           </Link>
           </MenuItem>
 
           <MenuItem tooltipText="Trader">
           <Link to="/trader"><Badge  color="primary">
-              <AccountCircleOutlined />
+              <AccountCircleIcon />
             </Badge>
           </Link> 
           </MenuItem>
@@ -163,7 +181,7 @@ const Navbar = () => {
 
           <MenuItem tooltipText="Stocks">
           <Link to="/stocks"><Badge color="primary">
-              <TrendingUp />
+              <TrendingUpIcon />
             </Badge>
           </Link> 
           </MenuItem>
@@ -171,11 +189,19 @@ const Navbar = () => {
           
           <MenuItem tooltipText="Portfolio">
           <Link to="/portfolio"><Badge color="primary">
-              <AccountBalanceWallet />
+              <AccountBalanceWalletIcon />
             </Badge>
           </Link> 
           </MenuItem>
- 
+
+          <MenuItem tooltipText="Earn">
+
+          <Link to="/trader" onClick={handleSubmit}><Badge color="primary">
+              <CurrencyExchangeIcon />
+            </Badge>
+          </Link> 
+          </MenuItem>
+
         </Right>
       </Wrapper>
     </Container>

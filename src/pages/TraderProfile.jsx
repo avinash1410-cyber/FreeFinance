@@ -1,55 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import axios from "axios";
+import useAxios from '../utils/useAxios';
+import { CircularProgress } from "@material-ui/core";
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
-import useAxios from '../utils/useAxios';
+import CustomButton from '../components/Button';
 
-export default function TraderProfile() {
+
+
+
+
+
+
+const BlackBox = styled.div`
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px;
+`;
+
+
+
+function TraderProfile() {
   const { id } = useParams();
   const [trader, setTrader] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  // const classes = useStyles();
+  const navigate = useNavigate();
+  const api=useAxios();
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/trader/${id}`, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          const json = await response.json();
-          setTrader(json);
-        } else {
-          console.error('Error fetching data');
-        }
-      } catch (error) {
-        console.error('Error fetching data', error);
-      } finally {
-        setLoading(false); // Set loading state to false when done fetching
-      }
-    }
-
-    fetchData();
+    axios.get(`http://127.0.0.1:8000/trader/${id}`)
+      .then((res) => {
+        setTrader(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
   }, [id]);
+
 
   return (
     <div>
       <ProtectedPage/>
       <Announcement />
       <Navbar />
-      <center><Navbar /></center>
-      <h1><center>Here is The list of our super Traders</center></h1>
-      {loading ? ( // Render loading state
-        <p>Loading...</p>
-      ) : (
-        <div>
-          <h3>Username: {trader?.cust.user.username}</h3> {/* Use optional chaining to avoid errors */}
-        </div>
+      {loading && <CircularProgress />} {/* Show loading indicator while fetching data */}
+      {error && <p>Error: {error.message}</p>} {/* Display error message if request fails */}
+      {trader && (
+        <BlackBox>
+            <p>Name: {trader.cust.user.username}</p>
+            <p>Address: {trader.cust.add}</p>
+            <p>Balance: {trader.cust.balance}</p>
+            <p>Phone: {trader.cust.phone}</p>
+            
+        </BlackBox>
       )}
+      {/* Disable buttons when loading or no stock data */}
+      {/* <CustomButton disabled={loading || !stock} onClick={handleBuy}>Buy</CustomButton>
+      
+      <CustomButton disabled={loading || !stock} onClick={handleSell}>Sell</CustomButton>
+       */}
+      <CustomButton>+</CustomButton>
     </div>
   );
 }
+export default TraderProfile;

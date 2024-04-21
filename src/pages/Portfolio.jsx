@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import useAxios from '../utils/useAxios';
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
+import { Wrapper, FirstComponent, SecondComponent,ThirdComponent,StockItem,ItemContainer } from '../components/Items';
 
 
-const PortfolioContainer = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-`;
 
-const StockItem = styled.div`
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-`;
+
 
 const Portfolio = () => {
   const [orders, setOrders] = useState([]);
@@ -46,7 +36,25 @@ const Portfolio = () => {
     <ProtectedPage/>
     <Announcement />
     <Navbar/>
-    <PortfolioContainer>
+    <Wrapper>
+    <FirstComponent>
+    
+    <ItemContainer>
+      <h2>My Orders</h2>
+      {orders.map(order => (
+        <StockItem key={order.id}>
+          <p>Stock Name: {order.stock.name}</p>
+          <p>Quantity: {order.quantity}</p>
+          <p>Current Price: ${order.stock.price}</p>
+          <p>Total Value: ${order.amount}</p>
+        </StockItem>
+      ))}
+    </ItemContainer>
+   
+    </FirstComponent>
+    <SecondComponent>
+    
+    <ItemContainer>
       <h2>My Portfolio</h2>
       {orders.map(order => (
         <StockItem key={order.id}>
@@ -56,7 +64,24 @@ const Portfolio = () => {
           <p>Total Value: ${order.amount}</p>
         </StockItem>
       ))}
-    </PortfolioContainer>
+    </ItemContainer>
+    </SecondComponent>
+
+    <ThirdComponent>
+    
+    <ItemContainer>
+      <h2>My Balance</h2>
+      {orders.map(order => (
+        <StockItem key={order.id}>
+          <p>Stock Name: {order.stock.name}</p>
+          <p>Quantity: {order.quantity}</p>
+          <p>Current Price: ${order.stock.price}</p>
+          <p>Total Value: ${order.amount}</p>
+        </StockItem>
+      ))}
+    </ItemContainer>
+    </ThirdComponent>
+    </Wrapper>
     </>
   );
 };

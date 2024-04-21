@@ -17,7 +17,7 @@ import { AuthProvider } from "./context/AuthContext";
 //import Register from "./views/registerPage";
 import ProtectedPage from "./views/ProtectedPage";
 import { PaytmButton } from "./components/PaytmButton";
-import ArtistProfile from "./pages/TraderProfile";
+import TraderProfile from "./pages/TraderProfile";
 import Portfolio from "./pages/Portfolio";
 import MyComponent from "./pages/Test";
 
@@ -43,7 +43,7 @@ const App = () => {
       <Route path="portfolio/" element={<Portfolio />} />
 
       <Route path="trader/" element={<TraderPage />} />
-      <Route path="trader/:id" element={<ArtistProfile />} />
+      <Route path="trader/:id" element={<TraderProfile />} />
       <Route path="register/" element={<Register />} />
       <Route path="test/" element={<MyComponent />} />
     </Routes>

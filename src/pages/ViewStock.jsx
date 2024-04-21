@@ -3,11 +3,15 @@ import { useParams,useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import useAxios from '../utils/useAxios';
-import { Button, CircularProgress } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress } from "@material-ui/core";
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
+import CustomButton from '../components/Button';
+
+
+
+
 
 
 
@@ -19,37 +23,37 @@ const BlackBox = styled.div`
   margin: 20px;
 `;
 
-const useStyles = makeStyles((theme) => ({
-  addToWatchlist: {
-    color: theme.palette.getContrastText(theme.palette.success.main),
-    backgroundColor: theme.palette.success.main,
-    '&:hover': {
-      backgroundColor: theme.palette.success.dark,
-    },
-  },
+// const useStyles = makeStyles((theme) => ({
+//   addToWatchlist: {
+//     color: theme.palette.getContrastText(theme.palette.success.main),
+//     backgroundColor: theme.palette.success.main,
+//     '&:hover': {
+//       backgroundColor: theme.palette.success.dark,
+//     },
+//   },
 
-  buyButton: {
-    color: theme.palette.getContrastText(theme.palette.success.main),
-    backgroundColor: theme.palette.success.main,
-    '&:hover': {
-      backgroundColor: theme.palette.success.dark,
-    },
-  },
-  sellButton: {
-    color: theme.palette.getContrastText(theme.palette.error.main),
-    backgroundColor: theme.palette.error.main,
-    '&:hover': {
-      backgroundColor: theme.palette.error.dark,
-    },
-  },
-}));
+//   buyButton: {
+//     color: theme.palette.getContrastText(theme.palette.success.main),
+//     backgroundColor: theme.palette.success.main,
+//     '&:hover': {
+//       backgroundColor: theme.palette.success.dark,
+//     },
+//   },
+//   sellButton: {
+//     color: theme.palette.getContrastText(theme.palette.error.main),
+//     backgroundColor: theme.palette.error.main,
+//     '&:hover': {
+//       backgroundColor: theme.palette.error.dark,
+//     },
+//   },
+// }));
 
 function ViewStock() {
   const { id } = useParams();
   const [stock, setStock] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const classes = useStyles();
+  // const classes = useStyles();
   const navigate = useNavigate();
   const api=useAxios();
 
@@ -124,11 +128,11 @@ function ViewStock() {
         </BlackBox>
       )}
       {/* Disable buttons when loading or no stock data */}
-      <Button disabled={loading || !stock} onClick={handleBuy} className={classes.buyButton}>Buy</Button>
-      <hr></hr>
-      <Button disabled={loading || !stock} onClick={handleSell} className={classes.sellButton}>Sell</Button>
-      <hr></hr>
-      <Button className={classes.addToWatchlist}>Add To watchlist</Button>
+      <CustomButton disabled={loading || !stock} onClick={handleBuy}>Buy</CustomButton>
+      
+      <CustomButton disabled={loading || !stock} onClick={handleSell}>Sell</CustomButton>
+      
+      <CustomButton>+</CustomButton>
     </div>
   );
 }
