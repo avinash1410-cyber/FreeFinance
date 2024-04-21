@@ -375,8 +375,6 @@ def createWatchlist(request):
 @api_view(['POST',])
 @permission_classes([IsAuthenticated])
 def addToWatchlist(request,id=None):
-    # if request.method == 'GET':
-    #     return Response({'stock_id':'','name':''}, status=status.HTTP_400_BAD_REQUEST)    
     if request.method == 'POST':
         try:
             # Get the Stock and User objects
@@ -391,7 +389,7 @@ def addToWatchlist(request,id=None):
             watchlist.stock.add(stock)
             watchlist.save()
             # Return success response
-            return Response({'response': 'Watchlist item added successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Successful'}, status=status.HTTP_201_CREATED)
         except Stock.DoesNotExist:
             return Response({'error': 'Stock does not exist'}, status=status.HTTP_404_NOT_FOUND)
         except Customer.DoesNotExist:
