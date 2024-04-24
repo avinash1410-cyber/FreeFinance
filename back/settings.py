@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'design',
     'paytm',
+    'relationship',
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
     'cloudinary',

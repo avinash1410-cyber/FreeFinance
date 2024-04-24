@@ -21,8 +21,8 @@ urlpatterns = [
     # path('search/<str:query>/',searchTrader),
     path('hire_trader/<int:pk>/',hireTrader),
     path('hires_list/',HiresList),
-    # path('addBalance/<int:pk>/',addBalance),
-    # path('withdrawBalance/<int:pk>/',withdrawBalance),
+    path('addBalance/',addBalance),
+    path('withdrawBalance/',withdrawBalance),
     # path('status',Status),
     # path('status/<int:pk>',status),
 ]

@@ -156,40 +156,43 @@ def testEndPoint(request):
 
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def addBalance(request,pk=None):
-    if request.method == 'GET':
-        data = f"{request.user}"
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
-        deposit = pk
-        cust=Customer.objects.get(user=request.user)
-        previous_balance=Customer.balance
-        new_balance=pk+previous_balance
-        cust.balance=new_balance
-        cust.save()
-        # data = f'Congratulation your API just responded to POST request with text: {text}'
-        return Response({'response': cust.balance}, status=status.HTTP_200_OK)
-    return Response({}, status.HTTP_400_BAD_REQUEST)
+def addBalance(request):
+    amount = request.data.get('amount')
+    if not amount:
+        return Response({'response': 'Amount is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    cust = Customer.objects.get(user=request.user)
+    previous_balance = cust.balance
+    previous_balance = int(previous_balance) if previous_balance else 0
+    print("Previous Balance")
+    print(previous_balance)
+    new_balance = int(amount) + previous_balance
+    cust.balance = new_balance
+    cust.save()
+    data = f'Congratulations, your new balance is: {new_balance}'
+    return Response({'response': data}, status=status.HTTP_200_OK)
 
 
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def withdrawBalance(request,pk=None):
-    if request.method == 'GET':
-        data = f"{request.user}"
+def withdrawBalance(request):
+    amount = request.data.get('amount')
+    if not amount:
+        return Response({'response': 'Amount is required'}, status=status.HTTP_400_BAD_REQUEST)
+    cust=Customer.objects.get(user=request.user)
+    previous_balance=cust.balance
+    previous_balance = int(previous_balance) if previous_balance else 0
+    new_balance=previous_balance-int(amount)
+    if new_balance<0:
+        data = f'Sorry, you can not withdraw more than {previous_balance}'
         return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
-        credit = pk
-        cust=Customer.objects.get(user=request.user)
-        previous_balance=Customer.balance
-        new_balance=previous_balance-pk
-        cust.balance=new_balance
-        cust.save()
-        # data = f'Congratulation your API just responded to POST request with text: {text}'
-        return Response({'response': cust.balance}, status=status.HTTP_200_OK)
-    return Response({}, status.HTTP_400_BAD_REQUEST)
+    cust.balance=new_balance
+    cust.save()
+    data = f'Congratulations, your new balance is: {new_balance}'
+    return Response({'response': data}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST',])
