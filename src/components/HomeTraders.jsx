@@ -5,14 +5,10 @@ import CustomButton from '../components/Button';
 import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
 
-// Styled component for the container
-const Container = styled.div`
-  max-width: 300px; /* Set maximum width */
-  margin: 0 auto; /* Center the container horizontally */
-  padding: 0 20px; /* Add padding to the sides */
-  color: #000; /* Set text color to black */
-  background-color: #f0f0f0;
-`;
+import { StockItem, ItemContainer } from '../components/Items';
+
+
+
 
 // Styled component for the flex container
 const Flex = styled.div`
@@ -21,17 +17,6 @@ const Flex = styled.div`
   justify-content: space-between;
 `;
 
-// Styled component for the item
-const Item = styled.div`
-  margin-bottom: 10px;
-  max-width: 200px;
-  border-radius: 5px;
-  background-color: black;
-  color: white;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px; /* Add rounded corners */
-`;
 
 const HomeTraders = () => {
   const [traders, setTraders] = useState([]);
@@ -62,9 +47,9 @@ const HomeTraders = () => {
         <CircularProgress />
       ) : (
         displayedTraders.map((trader) => (
-          <Container key={trader.id}>
+          <ItemContainer key={trader.id}>
             <center>
-              <Item>
+              <StockItem>
                 <Link to={`/trader/${trader.id}`}>
                   <div>
                     <p>Name: {trader.cust.user.username}</p>
@@ -72,14 +57,14 @@ const HomeTraders = () => {
                     <p>Address: {trader.cust.add}</p>
                   </div>
                 </Link>
-              </Item>
+              </StockItem>
             </center>
             <center>
               <CustomButton onClick={() => handleOpen(trader.id)}>+</CustomButton>
               <CustomButton onClick={() => handleOpen(trader.id)}>Buy</CustomButton>
               <CustomButton onClick={() => handleOpen(trader.id)}>Sell</CustomButton>
             </center>
-          </Container>
+          </ItemContainer>
         ))
       )}
     </Flex>

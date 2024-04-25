@@ -28,7 +28,7 @@ const Home = () => {
       <Announcement />
       <Navbar />
       <Slider />
-      <Link onClick={() => handleNavigation('/stocks/')}><h2>Socks</h2></Link>
+      <Link onClick={() => handleNavigation('/stocks/')}><h2>Stocks</h2></Link>
       <HomeStocks/>
       <Link onClick={() => handleNavigation('/traders/')}><h2>Traders</h2></Link>
       <HomeTraders/>

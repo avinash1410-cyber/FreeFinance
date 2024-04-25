@@ -6,6 +6,10 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+
+
 
 
 import styled from "styled-components";
@@ -133,8 +137,10 @@ const Navbar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await hitRequest('http://127.0.0.1:8000/account/update/', 'GET',() => navigate('/trader'));
+      const data = await hitRequest('http://127.0.0.1:8000/account/update/', 'GET');
       console.log(data.message);
+      alert(data.message)
+      navigate('/Earn')
     } catch (error) {
       console.error('Error updating account:', error);
     }
@@ -171,7 +177,7 @@ const Navbar = () => {
           </MenuItem>
 
           <MenuItem tooltipText="Trader">
-          <Link to="/trader"><Badge  color="primary">
+          <Link to="/traders"><Badge  color="primary">
               <AccountCircleIcon />
             </Badge>
           </Link> 
@@ -202,6 +208,21 @@ const Navbar = () => {
           </Link> 
           </MenuItem>
 
+
+
+          <MenuItem tooltipText="My Stocks">
+          <Link to="/my_stocks"><Badge color="primary">
+              <BookmarkBorderIcon />
+            </Badge>
+          </Link> 
+          </MenuItem>
+          
+          <MenuItem tooltipText="Notifications">
+          <Link to="/my_stocks"><Badge color="primary">
+              <NotificationsIcon />
+            </Badge>
+          </Link> 
+          </MenuItem>
         </Right>
       </Wrapper>
     </Container>

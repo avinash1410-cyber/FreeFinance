@@ -33,7 +33,7 @@ export default function Watchlist() {
       }
     };
     fetchData();
-  }, [api]);
+  }, []);
 
   return (
     <>

@@ -54,7 +54,7 @@ const Text = styled.text`
 
 
 
-function ViewStock() {
+function ClientPage() {
   const { id } = useParams();
   const [stock, setStock] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ function ViewStock() {
 
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/stock/${id}`)
+    axios.get("http://127.0.0.1:8000/trader/clients/")
       .then((res) => {
         setStock(res.data);
         setLoading(false);
@@ -133,4 +133,4 @@ function ViewStock() {
   );
 }
 
-export default ViewStock;
+export default ClientPage;

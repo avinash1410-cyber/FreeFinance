@@ -5,14 +5,13 @@ import CustomButton from '../components/Button';
 import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
 
+import { StockItem, ItemContainer } from '../components/Items';
+
+
+
+
 // Styled component for the container
-const Container = styled.div`
-  max-width: 300px; /* Set maximum width */
-  margin: 0 auto; /* Center the container horizontally */
-  padding: 0 20px; /* Add padding to the sides */
-  color: #000; /* Set text color to black */
-  background-color: #f0f0f0;
-`;
+
 
 // Styled component for the flex container
 const Flex = styled.div`
@@ -21,19 +20,11 @@ const Flex = styled.div`
   justify-content: space-between;
 `;
 
-// Styled component for the item
-const Item = styled.div`
-  margin-bottom: 10px;
-  max-width: 200px;
-  border-radius: 5px;
-  background-color: black;
-  color: white;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px; /* Add rounded corners */
-`;
 
-const HomeTraders = () => {
+
+
+
+const Traders = () => {
   const [traders, setTraders] = useState([]);
   const [loading, setLoading] = useState(true);
   const { hitRequest, handleNavigation } = useApiRequest();
@@ -50,21 +41,26 @@ const HomeTraders = () => {
     fetchTraders();
   }, []);
 
-  const handleOpen = (traderId) => {
-    handleNavigation(`/trader/${traderId}`);
+  const handleOpen = async (traderId) => {
+    try {
+      const traderData = await hitRequest(`http://127.0.0.1:8000/account/hire_trader/${traderId}`, 'GET');
+      console.log('Trader details:', traderData);
+      // Handle trader data, e.g., navigate to trader detail page
+    } catch (error) {
+      console.error('Error fetching trader details:', error);
+    }
   };
 
-  const displayedTraders = traders.slice(0, 4);
 
   return (
     <Flex>
       {loading ? (
         <CircularProgress />
       ) : (
-        displayedTraders.map((trader) => (
-          <Container key={trader.id}>
+        traders.map((trader) => (
+          <ItemContainer key={trader.id}>
             <center>
-              <Item>
+              <StockItem>
                 <Link to={`/trader/${trader.id}`}>
                   <div>
                     <p>Name: {trader.cust.user.username}</p>
@@ -72,15 +68,15 @@ const HomeTraders = () => {
                     <p>Address: {trader.cust.add}</p>
                   </div>
                 </Link>
-              </Item>
+              </StockItem>
             </center>
             <center>
               <CustomButton onClick={() => handleOpen(trader.id)}>Hire</CustomButton>
             </center>
-          </Container>
+          </ItemContainer>
         ))
       )}
     </Flex>
   );
 };
-export default HomeTraders;
+export default Traders;
