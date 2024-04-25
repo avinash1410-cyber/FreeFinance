@@ -7,6 +7,7 @@ from trader.models import Trader
 from trader.serializers import TraderSerializer
 from .models import Customer
 
+from relationship.models import RelationShip
 from stock.models import Stock
 from stock.serializers import StockSerializer
 from order.models import Order
@@ -204,6 +205,7 @@ def buyStock(request,pk=None):
         quantity=0
 
         cust=Customer.objects.get(user=request.user)
+        trader=Trader.objects.get(cust=cust)
         stock=Stock.objects.get(id=stock_id)
         if int(amount)<stock.price:
             message=f'Your amount is so much low please send at least Rs.{stock.price}.'
@@ -220,6 +222,7 @@ def buyStock(request,pk=None):
                 amount=amount,
                 cust=cust,
                 stock=stock,
+                trader=trader,
             )
         # data = f'Congratulation you have bought {quantity} no of stocks of {stock.name}'
         data="Successful"
@@ -298,6 +301,11 @@ def hireTrader(request,pk=None):
             cust=Customer.objects.get(user=request.user)
             trader.clients.add(cust)
             trader.save()
+            rel = RelationShip.objects.create(
+                    cust=cust,
+                    trader=trader,
+                )
+            rel.save()
             data = f'Congratulation you have Hire Mr {trader.cust.user.username}'
             return Response({'response': data}, status=status.HTTP_200_OK)
         except Trader.DoesNotExist:

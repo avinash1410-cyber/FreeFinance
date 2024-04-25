@@ -7,3 +7,12 @@ class TraderSerializer(serializers.ModelSerializer):
     class Meta:
         model=Trader
         fields='__all__'
+
+
+
+
+class TraderClientSerializer(serializers.ModelSerializer):
+    cust=CustomerSerializer()
+    class Meta:
+        model=Trader
+        fields='__all__'

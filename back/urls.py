@@ -23,6 +23,7 @@ urlpatterns = [
     path('category/', include('category.urls')),
     path('stock/', include('stock.urls')),
     path('trader/', include('trader.urls')),
+    path('relationship/', include('relationship.urls')),
     path('',include('stock.urls')),
     path('watchlist/',include('watchlist.urls')),
     path('order/',include('order.urls')),

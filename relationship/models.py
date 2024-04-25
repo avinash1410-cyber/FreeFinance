@@ -7,6 +7,6 @@ from trader.models import Trader
 class RelationShip(models.Model):
     trader=models.ForeignKey(Trader,null=True,blank=True,on_delete=models.CASCADE)
     cust=models.ForeignKey(Customer,null=True,blank=True,on_delete=models.CASCADE)
-    invetsed=models.IntegerField(max_length=100,null=True,blank=True)
+    invested=models.IntegerField(max_length=100,null=True,blank=True)
     Turnout=models.IntegerField(max_length=100,null=True,blank=True)
-    orders=models.ForeignKey(Order,null=True,blank=True,on_delete=models.CASCADE)
+    orders=models.ManyToManyField(Order,null=True,blank=True)
