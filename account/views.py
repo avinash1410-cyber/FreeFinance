@@ -26,7 +26,7 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-
+from django.db.models import Q
 
 
 
@@ -59,7 +59,7 @@ def register_page(request):
             phone=phone,
             balance=userBalance
         )
-        return Response({"message":"Registration done"})
+        return Response({"response":"Registration done"})
     return Response({"username":"","password":"","email":"","phone":"","add":""})
 
 
@@ -74,9 +74,9 @@ def login_page(request):
         if user is not None:
             login(request,user)
             print(request.user)
-            return Response({"message":"Login done"})
+            return Response({"response":"Login done"})
         else:
-            return Response({"message":"Invalid Credentials"})
+            return Response({"response":"Invalid Credentials"})
     return Response({"username":"","password":""})
 
 
@@ -84,7 +84,7 @@ def login_page(request):
 @api_view(('GET',))
 def logout_page(request):
     logout(request)
-    return Response({'message':"Logged out"})
+    return Response({'response':"Logged out"})
 
 
 
@@ -96,9 +96,9 @@ class update_trader(APIView):
         trader_exists = Trader.objects.filter(cust=cust).exists()        
         if not trader_exists:
             Trader.objects.create(cust=cust, Trader=True)
-            return Response({'message': 'Trader Created Successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'response': 'Trader Created Successfully'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'message': 'You are already a Trader'}, status=status.HTTP_200_OK)
+            return Response({'response': 'You are already a Trader'}, status=status.HTTP_200_OK)
 
 
 class CustomerAPIView(APIView):
@@ -198,73 +198,143 @@ def withdrawBalance(request):
 
 @api_view(['POST',])
 @permission_classes([IsAuthenticated])
-def buyStock(request,pk=None):
+def buyStock(request):
     if request.method == 'POST':
-        stock_id=request.data["stock_id"]
-        amount=int(request.data["amount"])
-        quantity=0
+        stock_id = request.data.get("stock_id")
+        amount = int(request.data.get("amount", 0))
+        client = request.data.get("client")
+        client_id = request.data.get("client_id")
+        quantity = 0
+        cust = None
+        trader = None
+        print("-------------------------------------")
+        print(stock_id)
+        print(amount)
+        print(client)
+        print(client_id)
 
-        cust=Customer.objects.get(user=request.user)
-        trader=Trader.objects.get(cust=cust)
-        stock=Stock.objects.get(id=stock_id)
-        if int(amount)<stock.price:
-            message=f'Your amount is so much low please send at least Rs.{stock.price}.'
-            return Response({'message': message}, status=status.HTTP_200_OK)
-        quantity=amount//int(stock.price)
-        try:
-            order = Order.objects.get(cust=cust, stock=stock)
-            order.quantity += int(quantity)
-            order.amount += int(amount)  # Incrementing the amount
-            order.save()
-        except Order.DoesNotExist:
-            order = Order.objects.create(
-                quantity=quantity,
-                amount=amount,
-                cust=cust,
-                stock=stock,
-                trader=trader,
-            )
-        # data = f'Congratulation you have bought {quantity} no of stocks of {stock.name}'
-        data="Successful"
-        return Response({'message': data}, status=status.HTTP_200_OK)
-    # elif request.method == 'GET':
-    #     return Response({'amount':'','stock_id':''}, status=status.HTTP_200_OK)
-    return Response({"message":"Request Not allowed"}, status.HTTP_400_BAD_REQUEST)
-
-
-
-@api_view(['POST',])
-@permission_classes([IsAuthenticated])
-def sellStock(request,pk=None,id=None):
-    # if request.method == 'GET':
-    #     return Response({'quantity':'','stock_id':''}, status=status.HTTP_200_OK)
-    if request.method == 'POST':
-        quantity=int(request.data["quantity"])
-        stock_id=request.data["stock_id"]
-        cust=Customer.objects.get(user=request.user)
-        stock=Stock.objects.get(id=stock_id)
-        try:
-            order=Order.objects.get(cust=cust,stock_id=stock)
-        except Order.DoesNotExist:
-            order = None
-            return Response({"Message":"Order Not Exist"},status=status.HTTP_200_OK)
-        
-        quantity_have=int(order.quantity)
-        if quantity_have<=0:
-            return Response({'message':f"You can't sell as u have {quantity_have} no of stocks please buy first"}, status=status.HTTP_200_OK)
-        if quantity_have-quantity<0:
-            return Response({'message':f"You can't sell as u have {quantity_have} no of stocks please buy first and u are trying to sell {quantity} no of stocks please decrease the quantity u want to sell"}, status=status.HTTP_200_OK)
-        new_quantity=int(quantity_have-quantity)
-        if new_quantity==0:
-            order.delete()
+        if client:
+            cust = Customer.objects.get(id=client_id)
+            cur = Customer.objects.get(user=request.user)
+            trader = Trader.objects.get(cust=cur)
         else:
-            order.quantity=new_quantity
-            order.save()
-        company=stock.name
-        # text=f"Congratulations u have sell {quantity} no of stock of {company} stocks !!!"
-        data="Successful"
-        return Response({'message': data}, status=status.HTTP_200_OK)
-    return Response({"message":"Request Not allowed"}, status.HTTP_400_BAD_REQUEST)
+            print("No Any tradre involve")
+            cust = Customer.objects.get(user=request.user)
+            trader = Trader.objects.get(cust=cust)
+        
+        print(trader)
+        print(cust)
+
+        try:
+            stock = Stock.objects.get(id=stock_id)
+            print(stock)
+            if amount < stock.price:
+                message = f'Your amount is too low. Please send at least Rs.{stock.price}.'
+                return Response({'response': message}, status=status.HTTP_200_OK)
+            quantity = amount // int(stock.price)
+            
+            try:
+                order = Order.objects.get(cust=cust, stock=stock,buy=trader)
+                print("A Previous Order Already exist")
+
+                previous_quantity = order.quantity
+                previous_quantity = int(previous_quantity) if previous_quantity else 0
+                order.quantity = previous_quantity+quantity
+                previous_amount = order.amount
+                previous_amount = int(previous_amount) if previous_amount else 0
+                order.amount =previous_amount+amount  # Incrementing the amount
+                order.save()
+            except Order.DoesNotExist:
+                print("Have to Create a new Order")
+                order = Order.objects.create(
+                    quantity=quantity,
+                    amount=amount,
+                    cust=cust,
+                    stock=stock,
+                    buy=trader,
+                )
+
+            if client:
+                rel, _ = RelationShip.objects.get_or_create(cust=cust, trader=trader)
+                rel.orders.add(order)
+                previous_balance = rel.invested
+                previous_balance = int(previous_balance) if previous_balance else 0
+                rel.invested = previous_balance - amount
+                rel.save()
+            
+            data = "Successful"
+            return Response({'response': data}, status=status.HTTP_200_OK)
+
+        except Stock.DoesNotExist:
+            return Response({"response": "Invalid stock_id"}, status=status.HTTP_400_BAD_REQUEST)
+        except Customer.DoesNotExist:
+            return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+        except Trader.DoesNotExist:
+            return Response({"response": "Invalid trader"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response({"response": "Request Not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def sellStock(request, pk=None, id=None):
+    if request.method == 'POST':
+        stock_id = request.data.get("stock_id")
+        client = request.data.get("client")
+        client_id = request.data.get("client_id")
+        quantity = request.data.get("quantity")
+        cust = None
+        trader = None
+
+        if client:
+            try:
+                cust = Customer.objects.get(id=client_id)
+                trader = Trader.objects.get(cust=cust)
+            except Customer.DoesNotExist:
+                return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+            except Trader.DoesNotExist:
+                return Response({"response": "Invalid trader"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            cust = Customer.objects.get(user=request.user)
+            trader = Trader.objects.get(cust=cust)
+        
+        try:
+            stock = Stock.objects.get(id=stock_id)
+            order = Order.objects.get(cust=cust, stock_id=stock, buy=trader)
+
+            previous_quantity = order.quantity or 0
+            quantity_have = previous_quantity
+
+            if quantity_have <= 0:
+                return Response({'response': f"You can't sell as you have {quantity_have} no of stocks, please buy first"}, status=status.HTTP_200_OK)
+
+            if quantity_have - int(quantity) < 0:
+                return Response({'response': f"You can't sell as you have {quantity_have} no of stocks, please buy first and you are trying to sell {quantity} no of stocks, please decrease the quantity you want to sell"}, status=status.HTTP_200_OK)
+
+            new_quantity = max(0, quantity_have - int(quantity))
+
+            if new_quantity == 0:
+                order.delete()
+            else:
+                order.quantity = new_quantity
+                order.save()
+
+            return Response({'response': 'Stocks sold successfully'}, status=status.HTTP_200_OK)
+
+        except Order.DoesNotExist:
+            return Response({'response': "No order exists for this stock"}, status=status.HTTP_400_BAD_REQUEST)
+        except Stock.DoesNotExist:
+            return Response({"response": "Invalid stock_id"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response({"response": "Method Not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
 
 
 @api_view(['GET', 'POST'])
@@ -309,24 +379,25 @@ def hireTrader(request,pk=None):
             data = f'Congratulation you have Hire Mr {trader.cust.user.username}'
             return Response({'response': data}, status=status.HTTP_200_OK)
         except Trader.DoesNotExist:
-            return Response({"Message":"Trader Not Found With Given Id"},status=status.HTTP_404_NOT_FOUND)
-    return Response({"Message":"Please select a Trader whom u want to Hire"}, status.HTTP_400_BAD_REQUEST)
+            return Response({"response":"Trader Not Found With Given Id"},status=status.HTTP_404_NOT_FOUND)
+    return Response({"response":"Please select a Trader whom u want to Hire"}, status.HTTP_400_BAD_REQUEST)
 
 
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def searchTrader(request,pk=None):
-    if request.method == 'GET':
-        data = f"{request.user}"
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
-        id=pk
-        trader=Trader.objects.get(id=pk)
-        # data = f'Congratulation your API just responded to POST request with text: {text}'
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    return Response({}, status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def search_trader(request):
+    keyterm = request.data.get("key", "")
+    print("_____________________________________________________-")
+    print(keyterm)
+    stocks = Stock.objects.filter(name__icontains=keyterm)
+    traders = Trader.objects.filter(
+        Q(cust__user__username__icontains=keyterm)).distinct()
+    stock_serializer = StockSerializer(stocks, many=True)
+    trader_serializer = TraderSerializer(traders, many=True)
+    
+    return Response({'stocks': stock_serializer.data, 'traders': trader_serializer.data}, status=status.HTTP_200_OK)
+
 
 
 
@@ -373,10 +444,10 @@ def createWatchlist(request):
     cust = Customer.objects.get(user=request.user)            
     try:
         watchlist=Watchlist.objects.get(name=name,cust=cust)
-        return Response({'message': 'Watchlist With Same Name Already Present'}, status=status.HTTP_201_CREATED)
+        return Response({'response': 'Watchlist With Same Name Already Present'}, status=status.HTTP_201_CREATED)
     except Watchlist.DoesNotExist:
         watchlist = Watchlist.objects.create(name=name,cust=cust)
-        return Response({'message': 'Watchlist Created'}, status=status.HTTP_201_CREATED)
+        return Response({'response': 'Watchlist Created'}, status=status.HTTP_201_CREATED)
 
 
 
@@ -400,7 +471,7 @@ def addToWatchlist(request,id=None):
             watchlist.stock.add(stock)
             watchlist.save()
             # Return success response
-            return Response({'message': 'Successful'}, status=status.HTTP_201_CREATED)
+            return Response({'response': 'Successful'}, status=status.HTTP_201_CREATED)
         except Stock.DoesNotExist:
             return Response({'error': 'Stock does not exist'}, status=status.HTTP_404_NOT_FOUND)
         except Customer.DoesNotExist:
@@ -415,7 +486,7 @@ def myWatchlist(request,pk=None):
     try:
         cust = Customer.objects.get(user=request.user)
     except Customer.DoesNotExist:
-        return Response({"Error":"Customer Not Exist"},status=status.HTTP_404_NOT_FOUND)
+        return Response({"error":"Customer Not Exist"},status=status.HTTP_404_NOT_FOUND)
     if pk==None:
         try:
             watchlist = Watchlist.objects.filter(cust=cust)

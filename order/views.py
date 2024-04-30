@@ -15,7 +15,7 @@ class OrderAPIView(APIView):
             cust=Customer.objects.get(user=request.user)
             data = Order.objects.get(id=pk,cust=cust)
             if data is None:
-                return Response({"Message":"This Order exist"})
+                return Response({"response":"This Order exist"})
             serializer = OrderSerializer(data)
             return Response(serializer.data)
         else:
@@ -25,7 +25,7 @@ class OrderAPIView(APIView):
                 serializer = OrderSerializer(data,many=True)
                 return Response(serializer.data)
             else:
-                return Response({"Message":"You are not a Custumer Till Now!"})                
+                return Response({"response":"You are not a Custumer Till Now!"})                
 
 
 

@@ -21,27 +21,57 @@ from order.serializers import OrderSerializer
 class TraderClientAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
-            print(pk)
             try:
+                print(pk)
                 cust = Customer.objects.get(user=request.user)
                 trader = Trader.objects.get(cust=cust)
                 client = Customer.objects.get(id=pk)
-                print(cust)
-                print(client)
-                print(trader)
-                print("________________________________________________________________________________")
+
                 rel = RelationShip.objects.get(trader=trader, cust=client)
+                print(cust)
+                print(trader)
+                print(client)
+                print(rel)
                 serializer = RelationShipSerializer(rel)
-                print(serializer.data)
-                return Response(serializer.data)
+                return Response({"response":serializer.data},status=status.HTTP_200_OK)
             except Trader.DoesNotExist:
-                return Response({"Message": "No Trader Found for this user"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"response": "No Trader Found for this user"}, status=status.HTTP_404_NOT_FOUND)
             except RelationShip.DoesNotExist:
-                return Response({"Message": "No Relationship found between trader and client"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"response": "No Relationship found between trader and client"}, status=status.HTTP_404_NOT_FOUND)
+            except Customer.DoesNotExist:
+                return Response({"response": "Client not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
             data = Trader.objects.all()
             serializer = TraderSerializer(data, many=True)
             return Response(serializer.data)
+        
+
+
+
+
+
+# class TraderClientAPIView(APIView):
+#     def get(self, request, pk=None):
+#         if pk:
+#             print(pk)
+#             try:
+#                 cust = Customer.objects.get(user=request.user)
+#                 trader = Trader.objects.get(cust=cust)
+#                 client = Customer.objects.get(id=pk)
+#                 rel = RelationShip.objects.get(trader=trader, cust=client)
+#                 serializer = RelationShipSerializer(rel)
+#                 return Response(serializer.data)
+#             except Trader.DoesNotExist:
+#                 return Response({"Message": "No Trader Found for this user"}, status=status.HTTP_404_NOT_FOUND)
+#             except RelationShip.DoesNotExist:
+#                 return Response({"Message": "No Relationship found between trader and client"}, status=status.HTTP_404_NOT_FOUND)
+#         else:
+#             data = Trader.objects.all()
+#             serializer = TraderSerializer(data, many=True)
+#             return Response(serializer.data)
+        
+
+
 
 
 
@@ -52,7 +82,7 @@ class TraderProfileAPIView(APIView):
                 data = Trader.objects.get(id=pk)
                 serializer = TraderSerializer(data)
             except Trader.DoesNotExist:
-                return Response({"Message":"No Any Trader Found from this id"},status=status.HTTP_404_NOT_FOUND)
+                return Response({"response":"No Any Trader Found from this id"},status=status.HTTP_404_NOT_FOUND)
         else:
             data = Trader.objects.all()
             serializer = TraderSerializer(data,many=True)
@@ -68,7 +98,7 @@ class MyTraderProfileAPIView(APIView):
             serializer = TraderSerializer(instance=trader_instance)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Trader.DoesNotExist:
-            return Response({"Message": "No Trader Found for this user"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"response": "No Trader Found for this user"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -116,7 +146,7 @@ class TraderClientBuyAPIView(APIView):
             stock=Stock.objects.get(id=stock_id)
             if int(amount)<stock.price:
                 message=f'Your amount is so much low please send at least Rs.{stock.price}.'
-                return Response({'message': message}, status=status.HTTP_200_OK)
+                return Response({'response': message}, status=status.HTTP_200_OK)
             quantity=amount//int(stock.price)
             try:
                 order = Order.objects.get(cust=cust, stock=stock,buy=trader)
@@ -144,7 +174,7 @@ class TraderClientBuyAPIView(APIView):
 
             rel.invested=previous_balance-int(amount)
             rel.save()
-            return Response({'message': f'Congrats u have Bought the {quantity} no stock of {stock} on behalf of {client}'}, status=status.HTTP_200_OK)        
+            return Response({'response': f'Congrats u have Bought the {quantity} no stock of {stock} on behalf of {client}'}, status=status.HTTP_200_OK)        
         
 
 class TraderClientOrderAPIView(APIView):
@@ -157,7 +187,7 @@ class TraderClientOrderAPIView(APIView):
             rel=RelationShip.objects.get(cust=client,trader=trader)
             order = rel.orders.all()
             serializer=OrderSerializer(order,many=True)
-            return Response({'message':serializer.data}, status=status.HTTP_200_OK)        
+            return Response({'response':serializer.data}, status=status.HTTP_200_OK)        
 
 
 
@@ -177,12 +207,12 @@ class TraderClientSellAPIView(APIView):
                 order.buy=trader
             except Order.DoesNotExist:
                 order = None
-                return Response({"Message":"Order Not Exist"},status=status.HTTP_200_OK)
+                return Response({"response":"Order Not Exist"},status=status.HTTP_200_OK)
             quantity_have=int(order.quantity)
             if quantity_have<=0:
-                return Response({'message':f"You can't sell as u have {quantity_have} no of stocks please buy first"}, status=status.HTTP_200_OK)
+                return Response({'response':f"You can't sell as u have {quantity_have} no of stocks please buy first"}, status=status.HTTP_200_OK)
             if quantity_have-quantity<0:
-                return Response({'message':f"You can't sell as u have {quantity_have} no of stocks please buy first and u are trying to sell {quantity} no of stocks please decrease the quantity u want to sell"}, status=status.HTTP_200_OK)
+                return Response({'response':f"You can't sell as u have {quantity_have} no of stocks please buy first and u are trying to sell {quantity} no of stocks please decrease the quantity u want to sell"}, status=status.HTTP_200_OK)
             new_quantity=int(quantity_have-quantity)
             if new_quantity==0:
                 money=order.stock.price*quantity
@@ -202,8 +232,8 @@ class TraderClientSellAPIView(APIView):
             client.balance=client_prev_balance+int(money)
             client.save()        
             data=f"Congratulations u have sell {quantity} no of stock of {company} stocks on behalf of {client}!!!"
-            return Response({'message': data}, status=status.HTTP_200_OK)
-        return Response({"message":"Request Not allowed"}, status.HTTP_400_BAD_REQUEST)
+            return Response({'response': data}, status=status.HTTP_200_OK)
+        return Response({"response":"Request Not allowed"}, status.HTTP_400_BAD_REQUEST)
 
 
 

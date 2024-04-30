@@ -18,7 +18,7 @@ urlpatterns = [
     path('add_to_watchlist/', addToWatchlist),
     # path('sell_options/', sellOption),
     # path('buy_options/', buyOption),
-    # path('search/<str:query>/',searchTrader),
+    path('search/',search_trader),
     path('hire_trader/<int:pk>/',hireTrader),
     path('hires_list/',HiresList),
     path('addBalance/',addBalance),

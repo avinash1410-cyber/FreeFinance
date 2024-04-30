@@ -91,7 +91,7 @@ def StockMonthlyAPIView(self, request, pk=None, format=None):
         serializer = StockSerializer(data)
         return Response(serializer.data)
     except Stock.DoesNotExist:
-        return Response({"message": "Not valid id"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"response": "Not valid id"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -102,7 +102,7 @@ def StockYearlyAPIView(self, request, pk=None, format=None):
         serializer = StockSerializer(data)
         return Response(serializer.data)
     except Stock.DoesNotExist:
-        return Response({"message": "Not valid id"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"response": "Not valid id"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -113,6 +113,6 @@ def StockWeeklyAPIView(self, request, pk=None, format=None):
         serializer = StockSerializer(data)
         return Response(serializer.data)
     except Stock.DoesNotExist:
-        return Response({"message": "Not valid id"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"response": "Not valid id"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

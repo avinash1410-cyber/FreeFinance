@@ -21,7 +21,7 @@ class WatchlistAPIView(APIView):
                 serializer = WatchlistSerializer(data)
                 return Response(serializer.data)
             except Watchlist.DoesNotExist:
-                return Response({"Message": "This Watchlist does not exist"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"response": "This Watchlist does not exist"}, status=status.HTTP_404_NOT_FOUND)
         else:
                 cust=Customer.objects.get(user=request.user)
                 if cust!=None:
