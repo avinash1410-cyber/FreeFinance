@@ -8,8 +8,13 @@ import { Wrapper, FirstComponent, SecondComponent, StockItem, ItemContainer } fr
 import InputForm from '../components/InputForm';
 import CustomButton from '../components/Button';
 import styled from 'styled-components';
-import { First,Second,Flex } from '../components/Helpers2';
 import BalanceForm from '../components/BalanceForm';
+import { Scrollable } from '../components/Items';
+
+import { First,Flex } from '../components/Helpers2';
+import { Second } from './Portfolio';
+import { BlackBox } from './ViewStock';
+
 
 
 
@@ -52,26 +57,36 @@ const MyStocks = () => {
       <Navbar />
       <Wrapper>
         <FirstComponent>
+          <Scrollable>
           <ItemContainer>
             <h2>My Stocks</h2>
             {orders.map(order => (
+            
               <StockItem key={order.id}>
+                
                 <Flex>
+                
                   <First>
+                    
                     <p>Stock Name: {order.stock.name}</p>
                     <p>Current Price: {order.stock.name}</p>
                     <p>Buy At Price: {order.stock.name}</p>
+                    
+                  </First>
+                
+                  <Second>
                     <p>Quantity: {order.stock.name}</p>
                     <p>Profit/Sell: {order.stock.name}</p>
-                  </First>
-                  <>
                     <CustomButton onClick={() => handleSell(order.stock.name)}>Sell</CustomButton>
                     <CustomButton onClick={() => handleBuy(order.stock.name)}>Buy</CustomButton>
-                  </>
+                  </Second>
                 </Flex>
+               
               </StockItem>
+              
             ))}
           </ItemContainer>
+          </Scrollable>
         </FirstComponent>
 
         <SecondComponent>

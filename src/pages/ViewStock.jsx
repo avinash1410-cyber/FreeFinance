@@ -13,13 +13,13 @@ import PopUp from '../components/PopUp';
 
 
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   justify-content: flex-start;
   width: 100%;
 `;
 
-const BlackBox = styled.div`
+export const BlackBox = styled.div`
   background-color: black;
   color: white;
   padding: 20px;
@@ -28,16 +28,16 @@ const BlackBox = styled.div`
   margin: 20px;
 `;
 
-const Graph = styled.svg`
+export const Graph = styled.svg`
   width: 100%;
   height: 150px; /* Adjust height as needed */
 `;
 
-const Bar = styled.rect`
+export  const Bar = styled.rect`
   fill: #4caf50;
 `;
 
-const BlackBox2 = styled.div`
+export const BlackBox2 = styled.div`
   background-color: black;
   color: white;
   padding: 20px;
@@ -46,11 +46,25 @@ const BlackBox2 = styled.div`
   margin: 20px;
 `;
 
-const Text = styled.text`
+export const Text = styled.text`
   fill: white;
   font-size: 12px;
   text-anchor: middle;
 `;
+
+
+
+export const BlackBox3 = styled.div`
+  background-color: grey;
+  color: white;
+  padding: 20px;
+  width: 96%;
+  border-radius: 5px;
+  margin: 20px;
+`;
+
+
+
 
 
 

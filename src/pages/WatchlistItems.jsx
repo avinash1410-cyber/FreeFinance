@@ -2,6 +2,10 @@ import React from 'react';
 
 import styled from "styled-components";
 
+import { Second } from './Portfolio';
+import { First,Flex } from '../components/Helpers2';
+
+
 const Info = styled.div`
   opacity: 0;
   width: 100%;
@@ -66,9 +70,17 @@ const Icon = styled.div`
 export default function WatchlistItems({stock}) {
   return (
     <div>
-      <p>Name: {stock.name}</p>
-      <p>Price: {stock.price}</p>
-      <p>Market Cap: {stock.market_cap}</p>
+      <Flex>
+        <First>
+        <p>Name: {stock.name}</p>
+        <p>Price: {stock.price}</p>
+        </First>
+        <Second>
+        <p>Market Cap: {stock.market_cap}</p>
+        </Second>
+      </Flex>
+      
+      
     </div>
   )
 }

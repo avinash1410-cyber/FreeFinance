@@ -1,114 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { useParams,useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import axios from "axios";
+import { Link, useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { CircularProgress } from '@material-ui/core';
 import useAxios from '../utils/useAxios';
-import { CircularProgress } from "@material-ui/core";
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
-import Announcement from "../components/Announcement";
-import CustomButton from '../components/Button';
-import useApiRequest from '../components/useApiRequest';
-import PopUp from '../components/PopUp';
+import {BlackBox2,BlackBox3,Bar,Text,Graph,Container,BlackBox} from "../pages/ViewStock"
 
 
-
-const Container = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-`;
-
-const BlackBox = styled.div`
-  background-color: black;
-  color: white;
-  padding: 20px;
-  flex: 1;
-  border-radius: 5px;
-  margin: 20px;
-`;
-
-const Graph = styled.svg`
-  width: 100%;
-  height: 150px; /* Adjust height as needed */
-`;
-
-const Bar = styled.rect`
-  fill: #4caf50;
-`;
-
-const BlackBox2 = styled.div`
-  background-color: black;
-  color: white;
-  padding: 20px;
-  width: 75%;
-  border-radius: 5px;
-  margin: 20px;
-`;
-
-const Text = styled.text`
-  fill: white;
-  font-size: 12px;
-  text-anchor: middle;
-`;
-
-
-
-function ClientPage() {
+const ClientProfile = () => {
   const { id } = useParams();
-  const [stock, setStock] = useState(null);
+  const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const classes = useStyles();
-  const navigate = useNavigate();
-  const api=useAxios();
-  const { hitRequest } = useApiRequest();
-  const [openPopup, setOpenPopup] = useState(false);
-  const [selectedStock, setSelectedStock] = useState(null);
-  const [actionType, setActionType] = useState(null);
-
-
+  const api = useAxios();
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/trader/clients/")
-      .then((res) => {
-        setStock(res.data);
+    async function fetchData() {
+      try {
+        const response = await api.get(`http://127.0.0.1:8000/trader/client/${id}`);
+        console.log(response.data);
+        setResponse(response.data.response); // Accessing response.data.response to get the inner object
         setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
+      } catch (error) {
+        setError(error);
         setLoading(false);
-      });
+      }
+    }
+
+    fetchData();
   }, [id]);
 
-
-  const handleOpenPopup = (stockId, type) => {
-    setSelectedStock(stockId);
-    setActionType(type);
-    setOpenPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setOpenPopup(false);
-  };
-
-
-
   return (
-    <div>
-      <ProtectedPage/>
-      <Announcement />
-      <Navbar />
-      {loading && <CircularProgress />} {/* Show loading indicator while fetching data */}
-      {error && <p>Error: {error.message}</p>} {/* Display error message if request fails */}
-      {stock && (
-        <Container>
+    <>
+          <ProtectedPage/>
+       <Navbar />
+    <Container>
+      {loading ? (
+        <CircularProgress />
+      ) : error ? (
+        <BlackBox>Error: {error.message}</BlackBox>
+      ) : response ? (
         <BlackBox>
-          <p>Name: {stock.name}</p>
-          <p>Price: {stock.price}</p>
-          <p>Market Cap: {stock.market_cap}</p>
+          <h2>Client Profile</h2>
+          <p>ID: {response.id}</p>
+          <p>Name: {response.cust.user.username}</p>
+          <p>Address: {response.cust.add}</p>
+          <p>Balance: {response.cust.balance}</p>
+          <p>Phone: {response.cust.phone}</p>
         </BlackBox>
-        <BlackBox2>
+      ) : (
+        <BlackBox>No data available</BlackBox>
+      )}
+      <BlackBox2>
         <Graph>
           <Bar x="10" y="20" width="20" height="100" />
           <Text x="20" y="140">Jan</Text>
@@ -123,14 +67,29 @@ function ClientPage() {
         </Graph>
 
         </BlackBox2>
-        </Container>
-      )}
-          <CustomButton onClick={() => handleOpenPopup(stock.id, 'add')}>ADD</CustomButton>
-          <CustomButton onClick={() => handleOpenPopup(stock.id, 'buy')}>BUY</CustomButton>
-          <CustomButton onClick={() => handleOpenPopup(stock.id, 'sell')}>SELL</CustomButton>
-          <PopUp open={openPopup} onClose={handleClosePopup} actionType={actionType} stockId={selectedStock} />
-    </div>
-  );
-}
+      </Container>
 
-export default ClientPage;
+      <BlackBox3>
+        <Container>
+          
+          {loading ? (
+        <CircularProgress />
+      ) : (
+            response.orders.map((order) => (
+            <Link to={`/stock/${order.stock.id}`}>
+                <BlackBox>
+                  <p>Name: {order.stock.name}</p>
+                  <p>Price: {order.stock.price}</p>
+                  <p>Market Cap: {order.stock.market_cap}</p>
+                </BlackBox>
+                </Link>
+            ))
+          )}
+       
+        </Container>
+      </BlackBox3>
+    </>
+  );
+};
+
+export default ClientProfile;

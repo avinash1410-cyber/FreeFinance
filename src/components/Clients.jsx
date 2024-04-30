@@ -1,18 +1,13 @@
-import { Link } from 'react-router-dom';
-import { CircularProgress } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { CircularProgress } from '@material-ui/core';
 import CustomButton from '../components/Button';
 import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
+import { StockItem, ItemContainer } from '../components/Items';
+import PopUp from './PopUp';
 
-// Styled component for the container
-export const Container = styled.div`
-  max-width: 300px; /* Set maximum width */
-  margin: 0 auto; /* Center the container horizontally */
-  padding: 0 20px; /* Add padding to the sides */
-  color: #000; /* Set text color to black */
-  background-color: #f0f0f0;
-`;
+
 
 // Styled component for the flex container
 export const Flex = styled.div`
@@ -21,27 +16,23 @@ export const Flex = styled.div`
   justify-content: space-between;
 `;
 
-// Styled component for the item
-export const Item = styled.div`
-  margin-bottom: 10px;
-  max-width: 200px;
-  border-radius: 5px;
-  background-color: black;
-  color: white;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px; /* Add rounded corners */
+// Styled component for centering
+const Centered = styled.div`
+  text-align: center;
 `;
 
-export default function Clients() {
+const Clients = () => {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { hitRequest, handleNavigation } = useApiRequest();
+  const { hitRequest } = useApiRequest();
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [actionType, setActionType] = useState(null);
 
   useEffect(() => {
     async function fetchStocks() {
       try {
-        const data = await hitRequest('http://127.0.0.1:8000/stock/');
+        const data = await hitRequest(`http://127.0.0.1:8000/trader/clients/${id}`);
         setStocks(data);
       } finally {
         setLoading(false);
@@ -50,8 +41,14 @@ export default function Clients() {
     fetchStocks();
   }, []);
 
-  const handleOpen = (stockId) => {
-    handleNavigation(`/stocks/${stockId}`);
+  const handleOpenPopup = (stockId, type) => {
+    setSelectedStock(stockId);
+    setActionType(type);
+    setOpenPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setOpenPopup(false);
   };
 
   return (
@@ -60,26 +57,31 @@ export default function Clients() {
         <CircularProgress />
       ) : (
         stocks.map((stock) => (
-          <Container key={stock.id}>
-            <center>
-              <Item>
-                <Link to={`/stocks/${stock.id}`}>
+          <ItemContainer key={stock.id}>
+            <Centered>
+              <StockItem>
+                <Link to={`/stock/${stock.id}`}>
                   <div>
                     <p>Name: {stock.name}</p>
                     <p>Price: {stock.price}</p>
                     <p>Market Cap: {stock.market_cap}</p>
                   </div>
                 </Link>
-              </Item>  
-            </center>
-            <center>
-              <CustomButton onClick={() => handleOpen(stock.id)}>+</CustomButton>
-              <CustomButton onClick={() => handleOpen(stock.id)}>Buy</CustomButton>
-              <CustomButton onClick={() => handleOpen(stock.id)}>Sell</CustomButton>
-            </center>
-          </Container>
+              </StockItem>
+            </Centered>
+            <Centered>
+              <CustomButton onClick={() => handleOpenPopup(stock.id, 'add')}>ADD</CustomButton>
+              <CustomButton onClick={() => handleOpenPopup(stock.id, 'buy')}>BUY</CustomButton>
+              <CustomButton onClick={() => handleOpenPopup(stock.id, 'sell')}>SELL</CustomButton>
+            </Centered>
+          </ItemContainer>
         ))
       )}
+
+      <PopUp open={openPopup} onClose={handleClosePopup} actionType={actionType} stockId={selectedStock} />
+
     </Flex>
   );
-}
+};
+
+export default Clients;

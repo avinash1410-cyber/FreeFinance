@@ -6,6 +6,9 @@ import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
 import { StockItem, ItemContainer } from '../components/Items';
 import PopUp from './PopUp';
+import { BlackBox } from '../pages/ViewStock';
+
+
 
 // Styled component for the flex container
 const Flex = styled.div`
@@ -48,7 +51,7 @@ const Stocks = () => {
   const handleClosePopup = () => {
     setOpenPopup(false);
   };
-  const displayedStocks = stocks.slice(0, 4);
+  const displayedStocks = stocks.slice(0, 3);
 
   return (
     <Flex>
@@ -56,10 +59,12 @@ const Stocks = () => {
         <CircularProgress />
       ) : (
         displayedStocks.map((stock) => (
+          
           <ItemContainer key={stock.id}>
+            <BlackBox>
             <Centered>
               <StockItem>
-                <Link to={`/stocks/${stock.id}`}>
+                <Link to={`/stock/${stock.id}`}>
                   <div>
                     <p>Name: {stock.name}</p>
                     <p>Price: {stock.price}</p>
@@ -68,12 +73,16 @@ const Stocks = () => {
                 </Link>
               </StockItem>
             </Centered>
+            </BlackBox>
             <Centered>
+            <BlackBox>
               <CustomButton onClick={() => handleOpenPopup(stock.id, 'add')}>ADD</CustomButton>
               <CustomButton onClick={() => handleOpenPopup(stock.id, 'buy')}>BUY</CustomButton>
               <CustomButton onClick={() => handleOpenPopup(stock.id, 'sell')}>SELL</CustomButton>
+            </BlackBox>
             </Centered>
           </ItemContainer>
+          
         ))
       )}
 

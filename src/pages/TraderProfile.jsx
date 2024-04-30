@@ -8,52 +8,12 @@ import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
 import CustomButton from '../components/Button';
-import { Flex, ItemContainer, StockItem } from '../components/Items';
+import { Flex, Item, ItemContainer, StockItem } from '../components/Items';
+import { First } from '../components/Helpers2';
+import { Second } from './Portfolio';
+import { BlackBox,BlackBox2,Graph,Bar,Text,Container,BlackBox3 } from './ViewStock';
 
 
-
-
-
-
-
-const Container = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-`;
-
-const BlackBox = styled.div`
-  background-color: black;
-  color: white;
-  padding: 20px;
-  flex: 1;
-  border-radius: 5px;
-  margin: 20px;
-`;
-
-const Graph = styled.svg`
-  width: 100%;
-  height: 150px; /* Adjust height as needed */
-`;
-
-const Bar = styled.rect`
-  fill: #4caf50;
-`;
-
-const BlackBox2 = styled.div`
-  background-color: black;
-  color: white;
-  padding: 20px;
-  width: 75%;
-  border-radius: 5px;
-  margin: 20px;
-`;
-
-const Text = styled.text`
-  fill: white;
-  font-size: 12px;
-  text-anchor: middle;
-`;
 
 
 
@@ -67,7 +27,7 @@ function TraderProfile() {
   const api=useAxios();
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/trader/${id}`)
+    axios.get(`http://127.0.0.1:8000/trader/profile/${id}`)
       .then((res) => {
         setTrader(res.data);
         setLoading(false);
@@ -80,6 +40,7 @@ function TraderProfile() {
 
 
   return (
+    <>
     <div>
       <ProtectedPage/>
       <Announcement />
@@ -129,9 +90,86 @@ function TraderProfile() {
       
       <CustomButton disabled={loading || !stock} onClick={handleSell}>Sell</CustomButton>
        */}
-      <CustomButton>Hire</CustomButton>
-      
+      <CustomButton>Remove</CustomButton>
+      <CustomButton>Add Balance</CustomButton>
     </div>
+
+    
+    <BlackBox3>
+        <Container>
+          <BlackBox>
+           
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>
+          </BlackBox>
+          
+          <BlackBox>
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>   
+          </BlackBox>
+          <BlackBox>
+           
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>
+          </BlackBox>
+          
+          </Container>     
+          <Container>
+          <BlackBox>
+           
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>
+          </BlackBox>
+          
+          <BlackBox>
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>   
+          </BlackBox>
+          <BlackBox>
+           
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>
+          </BlackBox>
+          
+          </Container>     
+          <Container>
+          <BlackBox>
+           
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>
+          </BlackBox>
+          
+          <BlackBox>
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>   
+          </BlackBox>
+          <BlackBox>
+           
+          <>
+          <p>name:HDFC</p>
+          <p>name:HDFC</p> 
+          </>
+          </BlackBox>
+          
+          </Container>     
+    </BlackBox3>
+    </>
   );
 }
 export default TraderProfile;

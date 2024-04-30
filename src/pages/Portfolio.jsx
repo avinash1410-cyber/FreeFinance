@@ -10,7 +10,7 @@ import BalanceForm from '../components/BalanceForm';
 import { First,Flex } from '../components/Helpers2';
 import styled from 'styled-components';
 import CustomButton from '../components/Button';
-
+import { Scrollable } from '../components/Items';
 
 
 
@@ -96,6 +96,7 @@ const Portfolio = () => {
           </ItemContainer>
         </FirstComponent>
 
+        <Scrollable>
         <SecondComponent>
           <ItemContainer>
             <h2>My Portfolio</h2>
@@ -128,7 +129,7 @@ const Portfolio = () => {
             ))}
           </ItemContainer>
         </SecondComponent>
-
+        </Scrollable>
         <ThirdComponent>
           <ItemContainer>
             <h2>My Balance</h2>

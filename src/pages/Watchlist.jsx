@@ -7,9 +7,10 @@ import Announcement from "../components/Announcement";
 import { Wrapper, FirstComponent, SecondComponent, ThirdComponent, StockItem, ItemContainer,Scrollable } from '../components/Items';
 
 
+import { Second,First,Flex } from './Portfolio';
 
-
-
+import { BlackBox } from './ViewStock';
+import { Link } from 'react-router-dom';
 
 
 
@@ -77,9 +78,14 @@ export default function Watchlist() {
                 <center><h3>{item.name}</h3></center>
                 <ul>
                   {item.stock.map((stock) => (
+                    <BlackBox>
                     <StockItem key={stock.id}>
+                    <Link to={`/stock/${stock.id}`}>
                       <WatchlistItems stock={stock} key={stock.id} />
+                      </Link>
                     </StockItem>
+                    </BlackBox>
+                   
                   ))}
                 </ul>
               </ItemContainer>

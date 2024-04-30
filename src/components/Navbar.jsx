@@ -1,30 +1,20 @@
-import { Badge, Button,Switch } from "@material-ui/core";
-
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-
-
-
-
-import styled from "styled-components";
-import { mobile } from "../responsive";
+import { Badge, Button } from "@mui/material";
 import {
-  Link,
-} from "react-router-dom";
-import React, { useState } from 'react';
+  AccountBalanceWallet as AccountBalanceWalletIcon,
+  AddShoppingCart as AddShoppingCartIcon,
+  TrendingUp as TrendingUpIcon,
+  AccountCircle as AccountCircleIcon,
+  CurrencyExchange as CurrencyExchangeIcon,
+  BookmarkBorder as BookmarkBorderIcon,
+  Notifications as NotificationsIcon
+} from '@mui/icons-material';
+import styled from "styled-components";
+import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import useApiRequest from "./useApiRequest";
-import { useNavigate } from 'react-router-dom';
-
-
 
 
 
@@ -33,7 +23,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   height: 60px;
-  ${mobile({ height: "50px" })}
 `;
 
 const Wrapper = styled.div`
@@ -41,32 +30,12 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  ${mobile({ padding: "10px 0px" })}
 `;
 
 const Left = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
-`;
-
-const Language = styled.span`
-  font-size: 14px;
-  cursor: pointer;
-  ${mobile({ display: "none" })}
-`;
-
-const SearchContainer = styled.div`
-  border: 0.5px solid lightgray;
-  display: flex;
-  align-items: center;
-  margin-left: 25px;
-  padding: 5px;
-`;
-
-const Input = styled.input`
-  border: none;
-  ${mobile({ width: "50px" })}
 `;
 
 const Center = styled.div`
@@ -76,14 +45,13 @@ const Center = styled.div`
 
 const Logo = styled.h1`
   font-weight: bold;
-  ${mobile({ fontSize: "24px" })}
 `;
+
 const Right = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  ${mobile({ flex: 2, justifyContent: "center" })}
 `;
 
 const MenuItem = styled.div`
@@ -91,10 +59,9 @@ const MenuItem = styled.div`
   cursor: pointer;
   margin-left: 25px;
   position: relative;
-  ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 
   &:hover::after {
-    content: "${({ tooltipText }) => tooltipText}"; /* Use a dynamic tooltip text */
+    content: "${({ tooltipText }) => tooltipText}";
     position: absolute;
     top: 100%;
     left: 50%;
@@ -109,120 +76,62 @@ const MenuItem = styled.div`
   }
 `;
 
-
-
-const Image = styled.img`
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-  ${mobile({ height: "40vh" })}
-`;
-
-
-
-
-
-
-
 const Navbar = () => {
-
-
-  const { logoutUser } = useContext(AuthContext);
-  const [i, setSearch] = useState();
-  const[Product, setProduct]=useState();
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const { hitRequest } = useApiRequest();
+  const { logoutUser } = useContext(AuthContext);
 
-
-  const handleSubmit = async (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const data = await hitRequest('http://127.0.0.1:8000/account/update/', 'GET');
-      console.log(data.message);
-      alert(data.message)
-      navigate('/Earn')
+      const response = await axios.post('http://127.0.0.1:8000/account/search/', { key: searchTerm });
+      console.log(response.data);
+      navigate('/search', { state: { results: response.data } });
     } catch (error) {
-      console.error('Error updating account:', error);
+      console.error('Error searching:', error);
     }
   };
-    
 
-
-
-
-
-
+  const menuItems = [
+    { icon: <AddShoppingCartIcon />, text: "Watchlist", link: "/watchlist" },
+    { icon: <AccountCircleIcon />, text: "Trader", link: "/traders" },
+    { icon: <TrendingUpIcon />, text: "Stocks", link: "/stocks" },
+    { icon: <AccountBalanceWalletIcon />, text: "Portfolio", link: "/portfolio" },
+    { icon: <CurrencyExchangeIcon />, text: "Earn", link: "/trader" },
+    { icon: <BookmarkBorderIcon />, text: "My Stocks", link: "/my_stocks" },
+    { icon: <NotificationsIcon />, text: "Notifications" } // Implement your notification popup logic here
+  ];
 
   return (
     <Container>
       <Wrapper>
         <Left>
-
+        <Wrapper>
         <button onClick={logoutUser}>LOGOUT</button>
-       
-          <SearchContainer>
-              <Input type="text" onChange={e => setSearch(e.target.value)} placeholder="search for the stock"/>
-              <Button onClick={handleSubmit}>Search</Button>
-          </SearchContainer>
+        </Wrapper>
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search for stocks"
+            />
+            <Button type="submit">Search</Button>
+          </form>
         </Left>
         <Center>
-          <Link to="/"><Logo>Social-trading</Logo></Link>
+          <Link to="/"><Logo>Social Trading</Logo></Link>
         </Center>
         <Right>
-          <MenuItem tooltipText="Watchlist">
-          <Link to="/watchlist"><Badge color="primary">
-              <AddShoppingCartIcon />
-            </Badge>
-          </Link>
-          </MenuItem>
-
-          <MenuItem tooltipText="Trader">
-          <Link to="/traders"><Badge  color="primary">
-              <AccountCircleIcon />
-            </Badge>
-          </Link> 
-          </MenuItem>
-
-
-
-          <MenuItem tooltipText="Stocks">
-          <Link to="/stocks"><Badge color="primary">
-              <TrendingUpIcon />
-            </Badge>
-          </Link> 
-          </MenuItem>
-
-          
-          <MenuItem tooltipText="Portfolio">
-          <Link to="/portfolio"><Badge color="primary">
-              <AccountBalanceWalletIcon />
-            </Badge>
-          </Link> 
-          </MenuItem>
-
-          <MenuItem tooltipText="Earn">
-
-          <Link to="/trader" onClick={handleSubmit}><Badge color="primary">
-              <CurrencyExchangeIcon />
-            </Badge>
-          </Link> 
-          </MenuItem>
-
-
-
-          <MenuItem tooltipText="My Stocks">
-          <Link to="/my_stocks"><Badge color="primary">
-              <BookmarkBorderIcon />
-            </Badge>
-          </Link> 
-          </MenuItem>
-          
-          <MenuItem tooltipText="Notifications">
-          <Link to="/my_stocks"><Badge color="primary">
-              <NotificationsIcon />
-            </Badge>
-          </Link> 
-          </MenuItem>
+          {menuItems.map((item, index) => (
+            <MenuItem key={index} tooltipText={item.text}>
+              <a href={item.link}>
+                <Badge color="primary">
+                  {item.icon}
+                </Badge>
+              </a>
+            </MenuItem>
+          ))}
         </Right>
       </Wrapper>
     </Container>

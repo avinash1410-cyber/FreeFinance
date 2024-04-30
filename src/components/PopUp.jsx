@@ -1,57 +1,47 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core';
 import useAxios from "../utils/useAxios";
-import useApiRequest from './useApiRequest';
 
-
-
-
-function PopUp({ open, onClose, actionType, stockId }) {
+function PopUp({ open, onClose, actionType, stockId, client_id = null }) {
   const [inputValue, setInputValue] = useState('');
   const api = useAxios();
-  const { hitRequest, handleNavigation } = useApiRequest();
+  // const { hitRequest, handleNavigation } = useApiRequest();
 
   const handleAction = async () => {
     if (actionType === 'add') {
-      // Perform action for adding
       console.log('Add Stock:', inputValue);
-      console.log(stockId);
-      console.log(inputValue);
       try {
-        const response = await hitRequest('http://127.0.0.1:8000/account/add_to_watchlist/','POST',{"stock_id":stockId,'name':inputValue});
+        const response = await api.post('http://127.0.0.1:8000/account/add_to_watchlist/',{ "stock_id": stockId, 'name': inputValue });
         console.log(response.data);
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
-
-    } else if (actionType === 'buy') {
-      // Perform action for buying
+    } else if (actionType === 'buy' && client_id === null) {
       console.log('Buy Stock:', inputValue);
-      console.log(stockId);
-      console.log(inputValue);
       try {
-        const response = await hitRequest('http://127.0.0.1:8000/account/add_to_watchlist/','POST',{"stock_id":stockId,'name':inputValue});
+        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/',{ "stock_id": stockId, 'amount': inputValue,client: false, client_id: null });
         console.log(response.data);
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
-
-    } else if (actionType === 'sell') {
-      // Perform action for selling
+    } else if (actionType === 'buy' && client_id) {
+      console.log('Buy Stock:', inputValue);
+      try {
+        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/',{ "stock_id": stockId, 'amount': inputValue, client: true, client_id: client_id });
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (actionType === 'sell' && client_id === null) {
       console.log('Sell Stock:', inputValue);
-      console.log(stockId);
-      console.log(inputValue);
-
       try {
-        const response = await hitRequest('http://127.0.0.1:8000/account/add_to_watchlist/','POST',{"stock_id":stockId,'name':inputValue});
+        const response = await api.post('http://127.0.0.1:8000/account/sell_stock/',{ "stock_id": stockId, 'quantity': inputValue });
         console.log(response.data);
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
-
-      
     }
-    onClose(); // Close the dialog after action
+    onClose();
   };
 
   const handleInputChange = (event) => {

@@ -6,6 +6,7 @@ import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
 
 import { StockItem, ItemContainer } from '../components/Items';
+import { BlackBox } from '../pages/ViewStock';
 
 
 
@@ -60,6 +61,7 @@ const Traders = () => {
         traders.map((trader) => (
           <ItemContainer key={trader.id}>
             <center>
+            <BlackBox>
               <StockItem>
                 <Link to={`/trader/${trader.id}`}>
                   <div>
@@ -69,9 +71,12 @@ const Traders = () => {
                   </div>
                 </Link>
               </StockItem>
+              </BlackBox>
             </center>
             <center>
+            <BlackBox>
               <CustomButton onClick={() => handleOpen(trader.id)}>Hire</CustomButton>
+              </BlackBox>
             </center>
           </ItemContainer>
         ))

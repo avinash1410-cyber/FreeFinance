@@ -6,6 +6,7 @@ import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
 
 import { StockItem, ItemContainer } from '../components/Items';
+import { BlackBox } from '../pages/ViewStock';
 
 
 
@@ -39,7 +40,7 @@ const HomeTraders = () => {
     handleNavigation(`/trader/${traderId}`);
   };
 
-  const displayedTraders = traders.slice(0, 4);
+  const displayedTraders = traders.slice(0, 3);
 
   return (
     <Flex>
@@ -49,6 +50,7 @@ const HomeTraders = () => {
         displayedTraders.map((trader) => (
           <ItemContainer key={trader.id}>
             <center>
+            <BlackBox>
               <StockItem>
                 <Link to={`/trader/${trader.id}`}>
                   <div>
@@ -58,12 +60,15 @@ const HomeTraders = () => {
                   </div>
                 </Link>
               </StockItem>
+            </BlackBox>
             </center>
             <center>
+            <BlackBox>
               <CustomButton onClick={() => handleOpen(trader.id)}>+</CustomButton>
               <CustomButton onClick={() => handleOpen(trader.id)}>Buy</CustomButton>
               <CustomButton onClick={() => handleOpen(trader.id)}>Sell</CustomButton>
-            </center>
+            </BlackBox>
+          </center>
           </ItemContainer>
         ))
       )}
