@@ -1,36 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Form,Input,Button } from './Helpers2';
+import { Form, Input, Button } from './Helpers2';
+import useAxios from "../utils/useAxios";
 
-
-const InputForm = ({ mode,stockName }) => {
+const InputForm = ({ mode, stock }) => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
+  const [total, setTotal] = useState(0); // State to hold the total value
+  const api = useAxios();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (mode === 'sell') {
-      console.log('Sell');
-      console.log(stockName);
-      console.log(quantity);
+  useEffect(() => {
+    // Recalculate total whenever quantity or price changes
+    if (quantity && price) {
+      setTotal(quantity * price);
     } else {
-      console.log('Buy');
-      console.log(stockName);
-      console.log(quantity);
+      setTotal(0);
+    }
+  }, [quantity, price]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post(mode === 'sell' ? 'http://127.0.0.1:8000/account/sell_stock/' : 'http://127.0.0.1:8000/account/buy_stock/', {
+        "stock_id": stock.id,
+        "order_price": price,
+        "quantity": quantity,
+        "client": false,
+        "client_id": null
+      });
+      console.log(response.data);
+      alert(response.data.response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Input type="number" placeholder="Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-      {mode === 'sell' ? (
+      <Input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+      {mode === 'sell' && (
         <>
-        <Input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
-        <Button type="submit">Sell</Button>
+          <Input
+            type="text"
+            placeholder="Total"
+            value={total} // Display the total value
+            readOnly // Make the input read-only
+          />
+          <Button type="submit">Sell</Button>
         </>
-      ) : (
+      )}
+      {mode === 'buy' && (
         <>
-        <Input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <Input
+        type="text"
+        placeholder="Total"
+        value={total} // Display the total value
+        readOnly // Make the input read-only
+         />
         <Button type="submit">Buy</Button>
         </>
       )}

@@ -11,6 +11,7 @@ import { First,Flex } from '../components/Helpers2';
 import styled from 'styled-components';
 import CustomButton from '../components/Button';
 import { Scrollable } from '../components/Items';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -36,6 +37,8 @@ const Portfolio = () => {
   const [orders, setOrders] = useState([]);
   const [traders, setTraders] = useState([]);
   const [account, setAccount] = useState();
+  const navigate = useNavigate();
+  const [hiredTraders, setHiredTraders] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -60,6 +63,23 @@ const Portfolio = () => {
 
     fetchData();
   }, []);
+
+
+  const handleClick = async (traderId) => {
+    try {
+      const response = await api.get(`http://127.0.0.1:8000/account/remove_trader/${traderId}/`);
+      console.log(response);
+      alert(response.data.response);
+      navigate('/portfolio');
+      // Add the hired trader to the list of hired traders
+      setHiredTraders([...hiredTraders, traderId]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+
+
 
   return (
     <>
@@ -86,7 +106,7 @@ const Portfolio = () => {
                 <p>TurnOut: 600000</p>
                 {/* <p>Remove</p> */}
                 <ButtonContainer>
-                  <CustomButton>Remove</CustomButton>
+                  <CustomButton onClick={() => handleClick(trader.id)}>Remove</CustomButton>
                 </ButtonContainer>
               </Second>
               </Flex>

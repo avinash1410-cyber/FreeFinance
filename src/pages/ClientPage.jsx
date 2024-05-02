@@ -6,6 +6,10 @@ import useAxios from '../utils/useAxios';
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import {BlackBox2,BlackBox3,Bar,Text,Graph,Container,BlackBox} from "../pages/ViewStock"
+import CustomButton from '../components/Button';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 const ClientProfile = () => {
@@ -14,6 +18,7 @@ const ClientProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const api = useAxios();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -30,6 +35,18 @@ const ClientProfile = () => {
 
     fetchData();
   }, [id]);
+
+
+
+  
+
+  const navigateToClientTradePage = (id) => {
+    // Navigate to the trade page
+    navigate(`/trader/client/${id}/stocks`);
+  };
+
+
+
 
   return (
     <>
@@ -68,6 +85,7 @@ const ClientProfile = () => {
 
         </BlackBox2>
       </Container>
+      <CustomButton onClick={() => navigateToClientTradePage(response.cust.id)}>Trade</CustomButton>
 
       <BlackBox3>
         <Container>

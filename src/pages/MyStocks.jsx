@@ -4,7 +4,7 @@ import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
 
-import { Wrapper, FirstComponent, SecondComponent, StockItem, ItemContainer } from '../components/Items';
+import {FirstComponent, SecondComponent, StockItem,ItemContainer,Wrapper, ThirdComponent } from '../components/Items';
 import InputForm from '../components/InputForm';
 import CustomButton from '../components/Button';
 import styled from 'styled-components';
@@ -16,6 +16,16 @@ import { Second } from './Portfolio';
 import { BlackBox } from './ViewStock';
 
 
+
+
+
+
+
+export const ItemContainer2 = styled.div`
+  max-width: max;
+  margin: 0 auto;
+  padding: 20px;
+`;
 
 
 
@@ -40,14 +50,14 @@ const MyStocks = () => {
     fetchData();
   }, []);
 
-  const handleSell = (stockName) => {
+  const handleSell = (stock) => {
     setMode('sell');
-    setSelectedStock(stockName);
+    setSelectedStock(stock);
   };
 
-  const handleBuy = (stockName) => {
+  const handleBuy = (stock) => {
     setMode('buy');
-    setSelectedStock(stockName);
+    setSelectedStock(stock);
   };
 
   return (
@@ -58,46 +68,50 @@ const MyStocks = () => {
       <Wrapper>
         <FirstComponent>
           <Scrollable>
-          <ItemContainer>
+          <ItemContainer2>
             <h2>My Stocks</h2>
             {orders.map(order => (
             
               <StockItem key={order.id}>
                 
                 <Flex>
-                
-                  <First>
+              
+                  <FirstComponent>
                     
                     <p>Stock Name: {order.stock.name}</p>
-                    <p>Current Price: {order.stock.name}</p>
-                    <p>Buy At Price: {order.stock.name}</p>
-                    
-                  </First>
+                    <p>Current Price: {order.stock.price}</p>
+                    <p>Profit/Loss: $10</p>  
+                  </FirstComponent>
                 
-                  <Second>
-                    <p>Quantity: {order.stock.name}</p>
-                    <p>Profit/Sell: {order.stock.name}</p>
-                    <CustomButton onClick={() => handleSell(order.stock.name)}>Sell</CustomButton>
-                    <CustomButton onClick={() => handleBuy(order.stock.name)}>Buy</CustomButton>
-                  </Second>
+                  <SecondComponent>
+                    <p>Order Price: {order.orderPrice}</p>
+                    <p>Quantity: {order.quantity}</p>
+                    <p>Invest/Current: {order.amount}/{order.amount+36}</p>
+                  </SecondComponent>
+
+                  <ThirdComponent>
+                    <p>Quantity: {order.quantity}</p>
+                    <p>For sell: {order.sell ? 'Yes' : 'No'}</p>
+                    <CustomButton onClick={() => handleSell(order.stock)}>Sell</CustomButton>
+                    <CustomButton onClick={() => handleBuy(order.stock)}>Buy</CustomButton>
+                  </ThirdComponent>
                 </Flex>
                
               </StockItem>
               
             ))}
-          </ItemContainer>
+          </ItemContainer2>
           </Scrollable>
         </FirstComponent>
 
         <SecondComponent>
           <ItemContainer>
             <h2>{mode === 'sell' ? 'Sell' : 'Buy'} Stocks</h2>
-            <InputForm mode={mode} stockName={selectedStock} />
+            <InputForm mode={mode} stock={selectedStock} />
           </ItemContainer>
 
           <ItemContainer>
             <h2>ADD BALANCE</h2>
-            <p>Current Balance   $4000</p>
             <BalanceForm mode={mode} stockName={selectedStock} />
           </ItemContainer>
         </SecondComponent>

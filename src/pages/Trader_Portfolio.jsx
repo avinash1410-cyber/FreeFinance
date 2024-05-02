@@ -53,19 +53,20 @@ const Trader_Portfolio = () => {
           <ItemContainer>
             <h2>Other Traders</h2>
             {traders.map(trader => (
+              
               <StockItem key={trader.id}>
+                <Link to={`/trader/${trader.id}`}>
                 <Flex>
                   <First>
                   <p>Trader Name: {trader.cust.user.username}</p>
-                  <p>Invested: $30,000</p>
+                  <p>Contact: {trader.cust.phone}</p>
                   </First>
                   <Second>
-                  <p>Trader Name: {trader.cust.user.username}</p>
-                  <p>Turnout: $40,000</p>
+                  <p>Balance(Profit/loss) : ${trader.cust.balance}</p>
+                  <p>reach: {trader.clients.length}</p>
                   </Second>
                 </Flex>
-                
-                {/* Add other trader details here */}
+                </Link>
               </StockItem>
             ))}
           </ItemContainer>
@@ -82,11 +83,11 @@ const Trader_Portfolio = () => {
                 <First>              
                 <></>
                 <p>Client: {client.user.username}</p>
-                <p>Amount: {client.user.username}</p>
+                <p>Amount: {client.balance}</p>
                 </First>
                 </Link>
                 <Second>
-                <p>Output: {client.user.username}</p>
+                <p>Contact: {client.phone}</p>
                 <CustomButton>Release</CustomButton>
                 </Second>
                 </Flex>

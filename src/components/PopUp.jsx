@@ -3,92 +3,90 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } 
 import useAxios from "../utils/useAxios";
 
 function PopUp({ open, onClose, actionType, stockId, client_id = null }) {
-  const [inputValue, setInputValue] = useState('');
+  const [name, setName] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [price, setPrice] = useState('');
+  const [total, setTotal] = useState('');
   const api = useAxios();
-  // const { hitRequest, handleNavigation } = useApiRequest();
 
   const handleAction = async () => {
-    if (actionType === 'add') {
-      console.log('Add Stock:', inputValue);
-      try {
-        const response = await api.post('http://127.0.0.1:8000/account/add_to_watchlist/',{ "stock_id": stockId, 'name': inputValue });
+    try {
+      if (actionType === 'add') {
+        const response = await api.post('http://127.0.0.1:8000/account/add_to_watchlist/', { "stock_id": stockId, 'name': name });
         console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (actionType === 'buy' && client_id === null) {
-      console.log('Buy Stock:', inputValue);
-      try {
-        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/',{ "stock_id": stockId, 'amount': inputValue,client: false, client_id: null });
+        alert(response.data.response);
+      } else if (actionType === 'buy' && client_id === null) {
+        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price });
         console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (actionType === 'buy' && client_id) {
-      console.log('Buy Stock:', inputValue);
-      try {
-        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/',{ "stock_id": stockId, 'amount': inputValue, client: true, client_id: client_id });
+      } else if (actionType === 'buy' && client_id) {
+        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price, client: true, client_id: client_id });
         console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (actionType === 'sell' && client_id === null) {
-      console.log('Sell Stock:', inputValue);
-      try {
-        const response = await api.post('http://127.0.0.1:8000/account/sell_stock/',{ "stock_id": stockId, 'quantity': inputValue });
+      } else if (actionType === 'sell' && client_id === null) {
+        const response = await api.post('http://127.0.0.1:8000/account/sell_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price });
         console.log(response.data);
-      } catch (error) {
-        console.log(error);
+      } else if (actionType === 'sell' && client_id ) {
+        const response = await api.post('http://127.0.0.1:8000/account/sell_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price, client: true, client_id: client_id});
+        console.log(response.data);
       }
+      onClose();
+    } catch (error) {
+      console.log(error);
     }
-    onClose();
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+  const handleQuantityChange = (event) => {
+    const newQuantity = event.target.value;
+    setQuantity(newQuantity);
+    calculateTotal(newQuantity, price);
   };
 
-  let dialogContent;
-  if (actionType === 'add') {
-    dialogContent = (
-      <DialogContent>
-        <TextField
-          label="Watchlist Name"
-          variant="outlined"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-      </DialogContent>
-    );
-  } else if (actionType === 'buy') {
-    dialogContent = (
-      <DialogContent>
-        <TextField
-          label="Amount"
-          variant="outlined"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-      </DialogContent>
-    );
-  } else if (actionType === 'sell') {
-    dialogContent = (
-      <DialogContent>
-        <TextField
-          label="Quantity"
-          variant="outlined"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-      </DialogContent>
-    );
-  }
+  const handlePriceChange = (event) => {
+    const newPrice = event.target.value;
+    setPrice(newPrice);
+    calculateTotal(quantity, newPrice);
+  };
+
+  const calculateTotal = (newQuantity, newPrice) => {
+    const newTotal = parseFloat(newQuantity) * parseFloat(newPrice);
+    setTotal(newTotal.toFixed(2));
+  };
 
   return (
     <div>
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>{actionType === 'add' ? 'Add Stock' : actionType === 'buy' ? 'Buy Stock' : 'Sell Stock'}</DialogTitle>
-        {dialogContent}
+        <DialogContent>
+          {actionType === 'add' && (
+            <TextField
+              label="Watchlist Name"
+              variant="outlined"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          )}
+          {(actionType === 'buy' || actionType === 'sell') && (
+            <>
+              <TextField
+                label="Quantity"
+                variant="outlined"
+                value={quantity}
+                onChange={handleQuantityChange}
+              />
+              <TextField
+                label="Order Price"
+                variant="outlined"
+                value={price}
+                onChange={handlePriceChange}
+              />
+              <TextField
+                label="Total"
+                variant="outlined"
+                value={total}
+                disabled
+              />
+            </>
+          )}
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleAction} color="primary">
             {actionType === 'add' ? 'Add' : actionType === 'buy' ? 'Buy' : 'Sell'}

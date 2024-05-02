@@ -74,7 +74,7 @@ const BalanceForm = () => {
           Deposit
         </StyledButton>
       </ButtonContainer>
-      <p>Current Balance: {balance}</p>
+      <p>Current Balance:$ {balance}</p>
     </Form>
   );
 };

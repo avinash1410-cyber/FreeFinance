@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import useAxios from '../utils/useAxios';
 
 
 
@@ -80,6 +81,7 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const { logoutUser } = useContext(AuthContext);
+  const api = useAxios();
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -92,12 +94,27 @@ const Navbar = () => {
     }
   };
 
+
+
+
+
+  async function handleEarnClick() {
+    try {
+      const Response = await api.get("http://127.0.0.1:8000/account/update/");
+      console.log(Response);
+      alert(Response.data.response);
+      navigate('/Earn');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
   const menuItems = [
     { icon: <AddShoppingCartIcon />, text: "Watchlist", link: "/watchlist" },
     { icon: <AccountCircleIcon />, text: "Trader", link: "/traders" },
     { icon: <TrendingUpIcon />, text: "Stocks", link: "/stocks" },
     { icon: <AccountBalanceWalletIcon />, text: "Portfolio", link: "/portfolio" },
-    { icon: <CurrencyExchangeIcon />, text: "Earn", link: "/trader" },
+    { icon: <CurrencyExchangeIcon onClick={handleEarnClick} />, text: "Earn" },
     { icon: <BookmarkBorderIcon />, text: "My Stocks", link: "/my_stocks" },
     { icon: <NotificationsIcon />, text: "Notifications" } // Implement your notification popup logic here
   ];
@@ -106,9 +123,7 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-        <Wrapper>
-        <button onClick={logoutUser}>LOGOUT</button>
-        </Wrapper>
+          <button onClick={logoutUser}>LOGOUT</button>
           <form onSubmit={handleSearch}>
             <input
               type="text"

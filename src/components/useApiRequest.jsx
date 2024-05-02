@@ -25,6 +25,7 @@ function useApiRequest() {
       }
 
       if (response.status === 200) {
+        console.log(response.response)
         return response.data;
       } else {
         throw new Error('Request failed');
