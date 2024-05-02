@@ -201,26 +201,35 @@ def withdrawBalance(request):
 def buyStock(request):
     if request.method == 'POST':
         stock_id = request.data.get("stock_id")
-        amount = int(request.data.get("amount", 0))
+        order_price = int(request.data.get("order_price", 0))
+        quantity= int(request.data.get("quantity", 0))
         client = request.data.get("client")
         client_id = request.data.get("client_id")
-        quantity = 0
         cust = None
         trader = None
-        print("-------------------------------------")
-        print(stock_id)
-        print(amount)
-        print(client)
-        print(client_id)
-
+        amount=quantity*order_price
         if client:
-            cust = Customer.objects.get(id=client_id)
-            cur = Customer.objects.get(user=request.user)
-            trader = Trader.objects.get(cust=cur)
+            try:
+                cust = Customer.objects.get(id=client_id)
+                cur = Customer.objects.get(user=request.user)
+                trader = Trader.objects.get(cust=cur)
+            except Customer.DoesNotExist:
+                    return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+            except Trader.DoesNotExist:
+                    return Response({"response": "Please Upgrade to Trader First"}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                    return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             print("No Any tradre involve")
-            cust = Customer.objects.get(user=request.user)
-            trader = Trader.objects.get(cust=cust)
+            try:
+                cust = Customer.objects.get(user=request.user)
+                trader = Trader.objects.get(cust=cust)
+            except Customer.DoesNotExist:
+                    return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+            except Trader.DoesNotExist:
+                    return Response({"response": "Please Upgrade to Trader First"}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                    return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         print(trader)
         print(cust)
@@ -228,10 +237,10 @@ def buyStock(request):
         try:
             stock = Stock.objects.get(id=stock_id)
             print(stock)
-            if amount < stock.price:
-                message = f'Your amount is too low. Please send at least Rs.{stock.price}.'
-                return Response({'response': message}, status=status.HTTP_200_OK)
-            quantity = amount // int(stock.price)
+            # if amount < stock.price:
+            #     message = f'Your amount is too low. Please send at least Rs.{stock.price}.'
+            #     return Response({'response': message}, status=status.HTTP_200_OK)
+            # quantity = amount // int(stock.price)
             
             try:
                 order = Order.objects.get(cust=cust, stock=stock,buy=trader)
@@ -243,6 +252,8 @@ def buyStock(request):
                 previous_amount = order.amount
                 previous_amount = int(previous_amount) if previous_amount else 0
                 order.amount =previous_amount+amount  # Incrementing the amount
+                avg_price=(previous_amount+amount)//(previous_quantity+quantity)
+                order.orderPrice=avg_price
                 order.save()
             except Order.DoesNotExist:
                 print("Have to Create a new Order")
@@ -252,6 +263,7 @@ def buyStock(request):
                     cust=cust,
                     stock=stock,
                     buy=trader,
+                    orderPrice=order_price
                 )
 
             if client:
@@ -278,60 +290,186 @@ def buyStock(request):
 
 
 
-@api_view(['POST'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@api_view(['POST',])
 @permission_classes([IsAuthenticated])
-def sellStock(request, pk=None, id=None):
+def sellStock(request):
     if request.method == 'POST':
         stock_id = request.data.get("stock_id")
+        order_price = int(request.data.get("order_price", 0))
+        quantity= int(request.data.get("quantity", 0))
         client = request.data.get("client")
         client_id = request.data.get("client_id")
-        quantity = request.data.get("quantity")
         cust = None
         trader = None
+        amount=quantity*order_price
 
         if client:
             try:
                 cust = Customer.objects.get(id=client_id)
+                cur = Customer.objects.get(user=request.user)
+                trader = Trader.objects.get(cust=cur)
+            except Customer.DoesNotExist:
+                    return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+            except Trader.DoesNotExist:
+                    return Response({"response": "Please Upgrade to Trader First"}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                    return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            print("No Any tradre involve")
+            try:
+                cust = Customer.objects.get(user=request.user)
                 trader = Trader.objects.get(cust=cust)
             except Customer.DoesNotExist:
-                return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
             except Trader.DoesNotExist:
-                return Response({"response": "Invalid trader"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            cust = Customer.objects.get(user=request.user)
-            trader = Trader.objects.get(cust=cust)
+                    return Response({"response": "Please Upgrade to Trader First"}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                    return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+        print(trader)
+        print(cust)
+
         try:
             stock = Stock.objects.get(id=stock_id)
-            order = Order.objects.get(cust=cust, stock_id=stock, buy=trader)
+            print(stock)            
+            buyorder = Order.objects.get(cust=cust, stock=stock,buy=trader,sell=False)
+            previous_quantity = buyorder.quantity
+            previous_quantity = int(previous_quantity) if previous_quantity else 0
+            if (previous_quantity-quantity)<0:
+                return Response({"response":f"You can sell max {previous_quantity} No of stocks "},status=status.HTTP_200_OK)
+            print("Have to Create a new Order")
+            order = Order.objects.create(
+                quantity=quantity,
+                amount=amount,
+                cust=cust,
+                stock=stock,
+                buy=trader,
+                orderPrice=order_price,
+                sell=True
+            )
 
-            previous_quantity = order.quantity or 0
-            quantity_have = previous_quantity
-
-            if quantity_have <= 0:
-                return Response({'response': f"You can't sell as you have {quantity_have} no of stocks, please buy first"}, status=status.HTTP_200_OK)
-
-            if quantity_have - int(quantity) < 0:
-                return Response({'response': f"You can't sell as you have {quantity_have} no of stocks, please buy first and you are trying to sell {quantity} no of stocks, please decrease the quantity you want to sell"}, status=status.HTTP_200_OK)
-
-            new_quantity = max(0, quantity_have - int(quantity))
-
-            if new_quantity == 0:
-                order.delete()
-            else:
-                order.quantity = new_quantity
-                order.save()
-
-            return Response({'response': 'Stocks sold successfully'}, status=status.HTTP_200_OK)
-
-        except Order.DoesNotExist:
-            return Response({'response': "No order exists for this stock"}, status=status.HTTP_400_BAD_REQUEST)
+            if client:
+                rel, _ = RelationShip.objects.get_or_create(cust=cust, trader=trader)
+                rel.orders.add(order)
+                previous_balance = rel.invested
+                previous_balance = int(previous_balance) if previous_balance else 0
+                rel.invested = previous_balance + amount
+                rel.save()            
+            data = "Successful"
+            return Response({'response': data}, status=status.HTTP_200_OK)
         except Stock.DoesNotExist:
             return Response({"response": "Invalid stock_id"}, status=status.HTTP_400_BAD_REQUEST)
+        except Customer.DoesNotExist:
+            return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+        except Trader.DoesNotExist:
+            return Response({"response": "Invalid trader"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return Response({"response": "Request Not allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({"response": "Method Not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def sellStock(request, pk=None, id=None):
+#     if request.method == 'POST':
+#         stock_id = request.data.get("stock_id")
+#         client = request.data.get("client")
+#         client_id = request.data.get("client_id")
+#         quantity = request.data.get("quantity")
+#         order_price=request.data.get("order_price")
+#         cust = None
+#         trader = None
+
+#         if client:
+#             try:
+#                 cust = Customer.objects.get(id=client_id)
+#                 trader = Trader.objects.get(cust=cust)
+#             except Customer.DoesNotExist:
+#                 return Response({"response": "Invalid customer"}, status=status.HTTP_400_BAD_REQUEST)
+#             except Trader.DoesNotExist:
+#                 return Response({"response": "Invalid trader"}, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             cust = Customer.objects.get(user=request.user)
+#             trader = Trader.objects.get(cust=cust)
+        
+#         try:
+#             stock = Stock.objects.get(id=stock_id)
+#             order = Order.objects.get(cust=cust, stock_id=stock, buy=trader)
+
+#             previous_quantity = order.quantity or 0
+#             quantity_have = previous_quantity
+
+#             if quantity_have <= 0:
+#                 return Response({'response': f"You can't sell as you have {quantity_have} no of stocks, please buy first"}, status=status.HTTP_200_OK)
+
+#             if quantity_have - int(quantity) < 0:
+#                 return Response({'response': f"You can't sell as you have {quantity_have} no of stocks, please buy first and you are trying to sell {quantity} no of stocks, please decrease the quantity you want to sell"}, status=status.HTTP_200_OK)
+
+#             new_quantity = max(0, quantity_have - int(quantity))
+
+#             if new_quantity == 0:
+#                 order.delete()
+#             else:
+#                 order.quantity = new_quantity
+#                 order.save()
+
+
+
+
+
+#             return Response({'response': 'Stocks sold successfully'}, status=status.HTTP_200_OK)
+
+#         except Order.DoesNotExist:
+#             return Response({'response': "No order exists for this stock"}, status=status.HTTP_400_BAD_REQUEST)
+#         except Stock.DoesNotExist:
+#             return Response({"response": "Invalid stock_id"}, status=status.HTTP_400_BAD_REQUEST)
+#         except Exception as e:
+#             return Response({"response": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#     return Response({"response": "Method Not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
@@ -381,6 +519,31 @@ def hireTrader(request,pk=None):
         except Trader.DoesNotExist:
             return Response({"response":"Trader Not Found With Given Id"},status=status.HTTP_404_NOT_FOUND)
     return Response({"response":"Please select a Trader whom u want to Hire"}, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(('GET',))
+@permission_classes([IsAuthenticated])
+def removeTrader(request,pk=None):
+    if pk:
+        try:
+            trader=Trader.objects.get(id=pk)
+            cust=Customer.objects.get(user=request.user)
+            new_trader=Trader.objects.get(cust=cust)
+            trader.clients.remove(cust)
+            trader.save()
+            rel = RelationShip.objects.get(cust=cust,trader=trader)
+            orders=rel.orders.all()
+            for order in orders:
+                order.trader=new_trader
+            rel.delete()
+            data = f'Congratulation you have Release Mr {trader.cust.user.username}'
+            return Response({'response': data}, status=status.HTTP_200_OK)
+        except Trader.DoesNotExist:
+            return Response({"response":"Trader Not Found With Given Id"},status=status.HTTP_404_NOT_FOUND)
+    return Response({"response":"Please select a Trader whom u want to Hire"}, status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 

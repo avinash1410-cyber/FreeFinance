@@ -10,6 +10,8 @@ class Order(models.Model):
     amount = models.IntegerField(null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     orderDate = models.DateTimeField(auto_now=True)
+    orderPrice= models.IntegerField(null=True, blank=True)
+    sell= models.BooleanField(null=True, blank=True,default=False)
     buy = models.ForeignKey(Trader, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):

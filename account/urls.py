@@ -20,6 +20,7 @@ urlpatterns = [
     # path('buy_options/', buyOption),
     path('search/',search_trader),
     path('hire_trader/<int:pk>/',hireTrader),
+    path('remove_trader/<int:pk>/',removeTrader),
     path('hires_list/',HiresList),
     path('addBalance/',addBalance),
     path('withdrawBalance/',withdrawBalance),
