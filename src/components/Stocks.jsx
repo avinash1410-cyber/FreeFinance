@@ -33,7 +33,7 @@ const Stocks = () => {
   useEffect(() => {
     async function fetchStocks() {
       try {
-        const data = await hitRequest('http://127.0.0.1:8000/stock/');
+        const data = await hitRequest('https://avi8654340.pythonanywhere.com/stock/');
         setStocks(data);
       } finally {
         setLoading(false);

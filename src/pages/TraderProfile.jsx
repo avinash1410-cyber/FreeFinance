@@ -27,7 +27,7 @@ function TraderProfile() {
   const api=useAxios();
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/trader/profile/${id}`)
+    axios.get(`https://avi8654340.pythonanywhere.com/trader/profile/${id}`)
       .then((res) => {
         setTrader(res.data);
         setLoading(false);

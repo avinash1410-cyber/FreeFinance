@@ -81,7 +81,7 @@ export default function OrderItems({item}) {
     <Navbar />
     <Container>
     <Circle />
-    <Image src={`http://bishellapi.herokuapp.com${item.product === null ? 'loading' : item.product.image}`} alt="Product Image"/>
+    <Image src={`https://avi8654340.pythonanywhere.com/${item.product === null ? 'loading' : item.product.image}`} alt="Product Image"/>
     <Info>
       <Icon>
         <ShoppingCartOutlined />

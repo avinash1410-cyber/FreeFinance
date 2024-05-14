@@ -56,7 +56,7 @@ export default function StockList() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('http://127.0.0.1:8000/stock/', {
+        const response = await fetch('https://avi8654340.pythonanywhere.com/stock/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',

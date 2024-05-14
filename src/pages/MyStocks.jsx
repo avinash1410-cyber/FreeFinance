@@ -38,7 +38,7 @@ const MyStocks = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const orderResponse = await api.get("http://127.0.0.1:8000/account/my_stocks/");
+        const orderResponse = await api.get("https://avi8654340.pythonanywhere.com/account/my_stocks/");
         console.log("Order data:", orderResponse.data);
         // Set state accordingly
         setOrders(orderResponse.data);

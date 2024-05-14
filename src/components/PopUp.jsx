@@ -12,20 +12,20 @@ function PopUp({ open, onClose, actionType, stockId, client_id = null }) {
   const handleAction = async () => {
     try {
       if (actionType === 'add') {
-        const response = await api.post('http://127.0.0.1:8000/account/add_to_watchlist/', { "stock_id": stockId, 'name': name });
+        const response = await api.post('https://avi8654340.pythonanywhere.com/account/add_to_watchlist/', { "stock_id": stockId, 'name': name });
         console.log(response.data);
         alert(response.data.response);
       } else if (actionType === 'buy' && client_id === null) {
-        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price });
+        const response = await api.post('https://avi8654340.pythonanywhere.com/account/buy_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price });
         console.log(response.data);
       } else if (actionType === 'buy' && client_id) {
-        const response = await api.post('http://127.0.0.1:8000/account/buy_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price, client: true, client_id: client_id });
+        const response = await api.post('https://avi8654340.pythonanywhere.com/account/buy_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price, client: true, client_id: client_id });
         console.log(response.data);
       } else if (actionType === 'sell' && client_id === null) {
-        const response = await api.post('http://127.0.0.1:8000/account/sell_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price });
+        const response = await api.post('https://avi8654340.pythonanywhere.com/account/sell_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price });
         console.log(response.data);
       } else if (actionType === 'sell' && client_id ) {
-        const response = await api.post('http://127.0.0.1:8000/account/sell_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price, client: true, client_id: client_id});
+        const response = await api.post('https://avi8654340.pythonanywhere.com/account/sell_stock/', { "stock_id": stockId, 'quantity': quantity, 'order_price': price, client: true, client_id: client_id});
         console.log(response.data);
       }
       onClose();

@@ -33,7 +33,7 @@ const Traders = () => {
   useEffect(() => {
     async function fetchTraders() {
       try {
-        const data = await hitRequest('http://127.0.0.1:8000/trader/');
+        const data = await hitRequest('https://avi8654340.pythonanywhere.com/trader/');
         setTraders(data);
       } finally {
         setLoading(false);
@@ -44,7 +44,7 @@ const Traders = () => {
 
   const handleOpen = async (traderId) => {
     try {
-      const traderData = await hitRequest(`http://127.0.0.1:8000/account/hire_trader/${traderId}`, 'GET');
+      const traderData = await hitRequest(`https://avi8654340.pythonanywhere.com/account/hire_trader/${traderId}`, 'GET');
       console.log('Trader details:', traderData);
       // Handle trader data, e.g., navigate to trader detail page
     } catch (error) {

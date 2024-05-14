@@ -84,7 +84,7 @@ function ViewStock() {
 
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/stock/${id}`)
+    axios.get(`https://avi8654340.pythonanywhere.com/stock/${id}`)
       .then((res) => {
         setStock(res.data);
         setLoading(false);

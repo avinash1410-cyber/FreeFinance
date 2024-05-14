@@ -44,9 +44,9 @@ const Portfolio = () => {
     async function fetchData() {
       try {
         const [orderResponse, tradersResponse,accountResponse] = await Promise.all([
-          api.get("http://127.0.0.1:8000/account/my_stocks/"),
-          api.get("http://127.0.0.1:8000/account/hires_list/"),
-          api.get("http://127.0.0.1:8000/account/")
+          api.get("https://avi8654340.pythonanywhere.com/account/my_stocks/"),
+          api.get("https://avi8654340.pythonanywhere.com/account/hires_list/"),
+          api.get("https://avi8654340.pythonanywhere.com/account/")
         ]);
         console.log("Order data:", orderResponse.data);
         console.log("Traders data:", tradersResponse.data);
@@ -67,7 +67,7 @@ const Portfolio = () => {
 
   const handleClick = async (traderId) => {
     try {
-      const response = await api.get(`http://127.0.0.1:8000/account/remove_trader/${traderId}/`);
+      const response = await api.get(`https://avi8654340.pythonanywhere.com/account/remove_trader/${traderId}/`);
       console.log(response);
       alert(response.data.response);
       navigate('/portfolio');

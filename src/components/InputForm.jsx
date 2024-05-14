@@ -22,7 +22,7 @@ const InputForm = ({ mode, stock }) => {
     e.preventDefault();
 
     try {
-      const response = await api.post(mode === 'sell' ? 'http://127.0.0.1:8000/account/sell_stock/' : 'http://127.0.0.1:8000/account/buy_stock/', {
+      const response = await api.post(mode === 'sell' ? 'https://avi8654340.pythonanywhere.com/account/sell_stock/' : 'https://avi8654340.pythonanywhere.com/account/buy_stock/', {
         "stock_id": stock.id,
         "order_price": price,
         "quantity": quantity,

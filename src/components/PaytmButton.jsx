@@ -104,7 +104,7 @@ export function PaytmButton () {
     };
     console.log(body);
     await Axios({
-      url: 'https://bishellapi.herokuapp.com/paytm/pay/',
+      url: 'https://avi8654340.pythonanywhere.com/paytm/pay/',
       method: "POST",
       headers: {
         Accept: "application/json",

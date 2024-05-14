@@ -18,7 +18,7 @@ const BalanceForm = () => {
 
   const fetchBalance = async () => {
     try {
-      const response = await api.get("http://127.0.0.1:8000/account/");
+      const response = await api.get("https://avi8654340.pythonanywhere.com/account/");
       setBalance(response.data.balance);
     } catch (error) {
       console.error('Error fetching balance:', error);
@@ -30,7 +30,7 @@ const BalanceForm = () => {
     if (transactionType === 'deposit') {
       console.log('Deposit:', amount);
       try {
-        const orderResponse = await api.post("http://127.0.0.1:8000/account/addBalance/", {"amount":amount});
+        const orderResponse = await api.post("https://avi8654340.pythonanywhere.com/account/addBalance/", {"amount":amount});
         console.log("Order data:", orderResponse.data);
         // Update balance after successful request
         fetchBalance();
@@ -40,7 +40,7 @@ const BalanceForm = () => {
     } else {
       console.log('Withdraw:', amount);
       try {
-        const orderResponse = await api.post("http://127.0.0.1:8000/account/withdrawBalance/", {"amount":amount});
+        const orderResponse = await api.post("https://avi8654340.pythonanywhere.com/account/withdrawBalance/", {"amount":amount});
         console.log("Order data:", orderResponse.data);
         // Update balance after successful request
         fetchBalance();

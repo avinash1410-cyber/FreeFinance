@@ -86,7 +86,7 @@ const Navbar = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/account/search/', { key: searchTerm });
+      const response = await axios.post('https://avi8654340.pythonanywhere.com/account/search/', { key: searchTerm });
       console.log(response.data);
       navigate('/search', { state: { results: response.data } });
     } catch (error) {
@@ -100,7 +100,7 @@ const Navbar = () => {
 
   async function handleEarnClick() {
     try {
-      const Response = await api.get("http://127.0.0.1:8000/account/update/");
+      const Response = await api.get("https://avi8654340.pythonanywhere.com/account/update/");
       console.log(Response);
       alert(Response.data.response);
       navigate('/Earn');

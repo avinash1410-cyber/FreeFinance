@@ -23,7 +23,7 @@ const ClientProfile = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await api.get(`http://127.0.0.1:8000/trader/client/${id}`);
+        const response = await api.get(`https://avi8654340.pythonanywhere.com/trader/client/${id}`);
         console.log(response.data);
         setResponse(response.data.response); // Accessing response.data.response to get the inner object
         setLoading(false);

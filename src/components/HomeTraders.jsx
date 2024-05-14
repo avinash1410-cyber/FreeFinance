@@ -1,14 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CustomButton from '../components/Button';
 import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
-
 import { StockItem, ItemContainer } from '../components/Items';
 import { BlackBox } from '../pages/ViewStock';
 import useAxios from '../utils/useAxios';
-import { useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 // Styled component for the flex container
 const Flex = styled.div`
@@ -21,40 +20,46 @@ const HomeTraders = () => {
   const [traders, setTraders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hiredTraders, setHiredTraders] = useState([]);
-  const { hitRequest, handleNavigation } = useApiRequest();
+  const { hitRequest } = useApiRequest();
   const api = useAxios();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // Access the user from AuthContext
 
   useEffect(() => {
-    async function fetchTraders() {
+    const fetchTraders = async () => {
       try {
-        const data = await hitRequest('http://127.0.0.1:8000/trader/');
+        const data = await hitRequest('https://avi8654340.pythonanywhere.com/trader/');
         setTraders(data);
       } finally {
         setLoading(false);
       }
+    };
+
+    if (user) { // Only fetch traders if user is logged in
+      fetchTraders();
+    } else {
+      setLoading(false); // Set loading to false if user is not logged in
     }
-    fetchTraders();
-  }, []);
+  }, [user, hitRequest]);
 
   useEffect(() => {
-    // Assuming you have a separate API endpoint to fetch the list of hired traders
-    async function fetchHiredTraders() {
+    const fetchHiredTraders = async () => {
       try {
-        const data = await hitRequest('http://127.0.0.1:8000/hired-traders/');
+        const data = await hitRequest('https://avi8654340.pythonanywhere.com/hired-traders/');
         setHiredTraders(data);
       } catch (error) {
         console.error('Error fetching hired traders:', error);
       }
+    };
+
+    if (user) { // Only fetch hired traders if user is logged in
+      fetchHiredTraders();
     }
-    fetchHiredTraders();
-  }, []);
+  }, [user, hitRequest]);
 
-
-  
   const handleClick = async (traderId) => {
     try {
-      const response = await api.get(`http://127.0.0.1:8000/account/hire_trader/${traderId}/`);
+      const response = await api.get(`https://avi8654340.pythonanywhere.com/account/hire_trader/${traderId}/`);
       console.log(response);
       alert(response.data.response);
       navigate('/portfolio');
@@ -71,7 +76,7 @@ const HomeTraders = () => {
     <Flex>
       {loading ? (
         <CircularProgress />
-      ) : (
+      ) : user ? (
         displayedTraders.map((trader) => (
           <ItemContainer key={trader.id}>
             <center>
@@ -96,6 +101,8 @@ const HomeTraders = () => {
             </center>
           </ItemContainer>
         ))
+      ) : (
+        <p>Please log in to view traders.</p>
       )}
     </Flex>
   );

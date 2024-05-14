@@ -24,9 +24,9 @@ const Trader_Portfolio = () => {
     async function fetchData() {
       try {
         const [clientsResponse, tradersResponse,accountResponse] = await Promise.all([
-          api.get("http://127.0.0.1:8000/trader/clients/"),
-          api.get("http://127.0.0.1:8000/account/hires_list/"),
-          api.get("http://127.0.0.1:8000/account/"),
+          api.get("https://avi8654340.pythonanywhere.com/trader/clients/"),
+          api.get("https://avi8654340.pythonanywhere.com/account/hires_list/"),
+          api.get("https://avi8654340.pythonanywhere.com/account/"),
         ]);
         console.log("clients data:", clientsResponse.data);
         console.log("Traders data:", tradersResponse.data);

@@ -17,7 +17,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await hitRequest('http://127.0.0.1:8000/account/register/', 'POST', {
+      const data = await hitRequest('https://avi8654340.pythonanywhere.com/account/register/', 'POST', {
         username: username,
         email: email,
         password: password,
