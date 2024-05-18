@@ -14,6 +14,8 @@ import HomeStocks from "../components/HomeStocks";
 import HomeTraders from "../components/HomeTraders";
 import {Link} from "../components/Helpers";
 import { useNavigate } from "react-router-dom";
+import Home_Indexes from "../components/HomeIndexes";
+
 
 
 
@@ -28,9 +30,10 @@ const Home = () => {
       <Announcement />
       <Navbar />
       <Slider />
-      <Link onClick={() => handleNavigation('/stocks/')}><h2>Stocks</h2></Link>
+      <Home_Indexes></Home_Indexes>
+      <Link onClick={() => handleNavigation('/stocks/')}><h3>stocks</h3></Link>
       <HomeStocks/>
-      <Link onClick={() => handleNavigation('/traders/')}><h2>Traders</h2></Link>
+      <Link onClick={() => handleNavigation('/traders/')}><h3>traders</h3></Link>
       <HomeTraders/>
       <Newsletter/>
       <Footer/>

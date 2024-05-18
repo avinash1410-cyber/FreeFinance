@@ -24,6 +24,10 @@ import StockMarket from "./pages/WS";
 import ClientProfile from "./pages/ClientPage";
 import SearchResult from "./components/SearchResult";
 import axios from "axios";
+import Indexes from "./components/indexes";
+
+
+
 
 
 
@@ -60,6 +64,8 @@ const App = () => {
           <Route path="/trader/:id" element={<TraderProfile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/test" element={<MyComponent />} />
+          <Route path="/indexes" element={<Indexes />} />
+          
         </Routes>
       </AuthProvider>
     </BrowserRouter>
