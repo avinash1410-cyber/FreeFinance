@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 // const PaytmChecksum = require('paytmChecksum');
 // const https = require('https');
-import useAxios from "../utils/useAxios";
 import AuthContext from "../context/AuthContext";
 import { useLocation } from "react-router-dom";
 import ProtectedPage from "../views/ProtectedPage";
@@ -28,12 +27,8 @@ const Payment = styled.div`
 
 export function PaytmButton () {
   const [address,SetAddress]=useState("");
-  const [productid,SetProductId]=useState();
-  const [userid,SetUserId]=useState();
-  const [amount,SetAmount]=useState();
   const location = useLocation();
   const { user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
 
 
 

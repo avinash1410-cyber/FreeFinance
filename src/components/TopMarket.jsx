@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Chart from 'chart.js/auto';
-import Navbar from './Navbar';
 
 const Container = styled.div`
   padding: 20px;
@@ -42,7 +41,7 @@ const PaginationButton = styled.button`
 
 const TopMarket = () => {
   // Sample data
-  const [indexesData, setIndexesData] = useState([
+  const [indexesData] = useState([
     { name: 'Nifty 50', change: '+1.5%', marketCap: '$2.5T', graphData: [10, 20, 30, 40, 50] },
     { name: 'Banknifty', change: '-0.8%', marketCap: '$1.2T', graphData: [50, 40, 30, 20, 10] },
     { name: 'Sensex', change: '+2.0%', marketCap: '$3.0T', graphData: [20, 30, 40, 50, 60] },
@@ -92,7 +91,7 @@ const TopMarket = () => {
 
   useEffect(() => {
     renderGraphs();
-  }, []);
+  }, [renderGraphs]);
 
   // Pagination
   const indexOfLastRow = currentPage * rowsPerPage;

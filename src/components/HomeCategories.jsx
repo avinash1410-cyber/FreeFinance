@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
-import CustomButton from '../components/Button';
 import useApiRequest from './useApiRequest';
 import styled from 'styled-components';
 import { StockItem, ItemContainer } from '../components/Items';
@@ -46,12 +45,6 @@ const HomeCategories = () => {
       setLoading(false); // Set loading to false if user is not logged in
     }
   }, [user, hitRequest]);
-
-  const handleOpenPopup = (stockId, type) => {
-    setSelectedStock(stockId);
-    setActionType(type);
-    setOpenPopup(true);
-  };
 
   const handleClosePopup = () => {
     setOpenPopup(false);

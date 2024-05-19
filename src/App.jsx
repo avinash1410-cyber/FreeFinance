@@ -14,13 +14,11 @@ import Watchlist from "./pages/Watchlist";
 import TraderPage from "./pages/TraderPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedPage from "./views/ProtectedPage";
-import { PaytmButton } from "./components/PaytmButton";
 import TraderProfile from "./pages/TraderProfile";
 import Portfolio from "./pages/Portfolio";
 import MyComponent from "./pages/Test";
-import My_Traders_Portfolio from "./pages/Trader_Portfolio";
+import MyTradersPortfolio from "./pages/Trader_Portfolio";
 import MyStocks from "./pages/MyStocks";
-import StockMarket from "./pages/WS";
 import ClientProfile from "./pages/ClientPage";
 import SearchResult from "./components/SearchResult";
 import axios from "axios";
@@ -34,15 +32,6 @@ import Indexes from "./components/indexes";
 
 const App = () => {
   const [searchResults, setSearchResults] = useState(null);
-
-  const handleSearch = async (key) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/account/search/', { key });
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error('Error updating account:', error);
-    }
-  };
 
   return (
     <BrowserRouter>
@@ -59,7 +48,7 @@ const App = () => {
           <Route path="/stock/:id" element={<ViewStock />} />
           <Route path="/trader/client/:id" element={<ClientProfile />} />
           <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/Earn" element={<My_Traders_Portfolio />} />
+          <Route path="/Earn" element={<MyTradersPortfolio />} />
           <Route path="/traders" element={<TraderPage />} />
           <Route path="/trader/:id" element={<TraderProfile />} />
           <Route path="/register" element={<Register />} />

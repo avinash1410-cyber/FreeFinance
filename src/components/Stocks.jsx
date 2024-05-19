@@ -40,7 +40,7 @@ const Stocks = () => {
       }
     }
     fetchStocks();
-  }, []);
+  }, [fetchStocks]);
 
   const handleOpenPopup = (stockId, type) => {
     setSelectedStock(stockId);

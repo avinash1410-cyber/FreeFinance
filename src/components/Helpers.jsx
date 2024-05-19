@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import {mobile} from "../responsive";
-import PropTypes from 'prop-types';
-import axios from 'axios';
 
 
 export const Container = styled.div`

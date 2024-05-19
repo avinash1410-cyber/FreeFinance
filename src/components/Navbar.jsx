@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Badge, Button, Popover, Typography, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Badge, Button, Popover, Typography, List, ListItem, ListItemText } from '@mui/material';
 import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
   AddShoppingCart as AddShoppingCartIcon,

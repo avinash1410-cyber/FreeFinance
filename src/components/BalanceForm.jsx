@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Form, Input, Button } from './Helpers2';
-import { Balance } from '@mui/icons-material';
-import CustomButton from './Button';
 import useAxios from "../utils/useAxios";
 
 const BalanceForm = () => {
@@ -14,7 +12,7 @@ const BalanceForm = () => {
   useEffect(() => {
     // Fetch balance data initially
     fetchBalance();
-  }, []);
+  }, [fetchBalance]);
 
   const fetchBalance = async () => {
     try {

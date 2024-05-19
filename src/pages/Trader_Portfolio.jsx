@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 
 
-const Trader_Portfolio = () => {
+const MyTradersPortfolio = () => {
   const api = useAxios();
   const [clients, setClients] = useState([]);
   const [traders, setTraders] = useState([]);
@@ -107,4 +107,4 @@ const Trader_Portfolio = () => {
   );
 };
 
-export default Trader_Portfolio;
+export default MyTradersPortfolio;

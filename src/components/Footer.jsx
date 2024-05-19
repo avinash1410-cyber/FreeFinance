@@ -4,7 +4,6 @@ import {
   LinkedIn,
   MailOutline,
   Phone,
-  Pinterest,
   Room,
   Twitter,
 } from "@material-ui/icons";
