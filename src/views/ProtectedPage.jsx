@@ -72,7 +72,28 @@ function ProtectedPage() {
 
   const handleOptionClick = (option) => {
     // Handle option click here
-    console.log("Option clicked:", option);
+    if (option === 'add_money') {
+      // Add your logic for "Add Money" option here
+      console.log("Add Money selected");
+    } else if (option === 'watchlist') {
+      // Add your logic for "Watchlist" option here
+      console.log("Watchlist selected");
+    } else if (option === 'my_stocks') {
+      // Add your logic for "My Stocks" option here
+      console.log("My Stocks selected");
+    } else if (option === 'my_traders') {
+      // Add your logic for "My Traders" option here
+      console.log("My Traders selected");
+    } else if (option === 'custumer_support') {
+      // Add your logic for "Customer Support" option here
+      console.log("Customer Support selected");
+    } else if (option === 'setting') {
+      // Add your logic for "Settings" option here
+      console.log("Settings selected");
+    } else {
+      console.log("Unknown option selected");
+    }
+  
     // Close the menu
     handleMenuClose();
   };
