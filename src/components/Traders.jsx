@@ -28,7 +28,7 @@ const Flex = styled.div`
 const Traders = () => {
   const [traders, setTraders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { hitRequest, handleNavigation } = useApiRequest();
+  const { hitRequest } = useApiRequest();
 
   useEffect(() => {
     async function fetchTraders() {

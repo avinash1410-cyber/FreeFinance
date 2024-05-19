@@ -11,10 +11,7 @@ import styled from 'styled-components';
 import BalanceForm from '../components/BalanceForm';
 import { Scrollable } from '../components/Items';
 
-import { First,Flex } from '../components/Helpers2';
-import { Second } from './Portfolio';
-import { BlackBox } from './ViewStock';
-
+import { Flex } from '../components/Helpers2';
 
 
 

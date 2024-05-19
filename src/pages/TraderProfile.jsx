@@ -19,9 +19,6 @@ function TraderProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // const classes = useStyles();
-  const navigate = useNavigate();
-  const api=useAxios();
-
   useEffect(() => {
     axios.get(`https://avi8654340.pythonanywhere.com/trader/profile/${id}`)
       .then((res) => {

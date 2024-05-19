@@ -1,9 +1,6 @@
-import useAxios from '../utils/useAxios';
-import styled from "styled-components";
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
-import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import Stocks from '../components/Stocks';
 

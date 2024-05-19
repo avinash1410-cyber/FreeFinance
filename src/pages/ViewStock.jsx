@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import useAxios from '../utils/useAxios';
 import { CircularProgress } from "@material-ui/core";
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
 import CustomButton from '../components/Button';
-import useApiRequest from '../components/useApiRequest';
 import PopUp from '../components/PopUp';
 
 

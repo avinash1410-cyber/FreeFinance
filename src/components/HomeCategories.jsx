@@ -25,8 +25,8 @@ const HomeCategories = () => {
   const [loading, setLoading] = useState(true);
   const { hitRequest } = useApiRequest();
   const [openPopup, setOpenPopup] = useState(false);
-  const [selectedStock, setSelectedStock] = useState(null);
-  const [actionType, setActionType] = useState(null);
+  const [selectedStock] = useState(null);
+  const [actionType] = useState(null);
   const { user } = useContext(AuthContext); // Access the user from AuthContext
 
   useEffect(() => {
