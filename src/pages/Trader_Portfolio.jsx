@@ -10,9 +10,6 @@ import CustomButton from '../components/Button';
 import BalanceForm from '../components/BalanceForm';
 import { Link } from 'react-router-dom';
 
-
-
-
 const MyTradersPortfolio = () => {
   const api = useAxios();
   const [clients, setClients] = useState([]);
@@ -22,14 +19,14 @@ const MyTradersPortfolio = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [clientsResponse, tradersResponse,accountResponse] = await Promise.all([
+        const [clientsResponse, tradersResponse, accountResponse] = await Promise.all([
           api.get("https://avi8654340.pythonanywhere.com/trader/clients/"),
           api.get("https://avi8654340.pythonanywhere.com/account/hires_list/"),
           api.get("https://avi8654340.pythonanywhere.com/account/"),
         ]);
         console.log("clients data:", clientsResponse.data);
         console.log("Traders data:", tradersResponse.data);
-        console.log("Account data",accountResponse.data)
+        console.log("Account data", accountResponse.data)
         // Set state accordingly
         setClients(clientsResponse.data);
         setTraders(tradersResponse.data);
@@ -40,7 +37,7 @@ const MyTradersPortfolio = () => {
     }
 
     fetchData();
-  }, []);
+  }, [api]);
 
   return (
     <>
@@ -52,19 +49,18 @@ const MyTradersPortfolio = () => {
           <ItemContainer>
             <h2>Other Traders</h2>
             {traders.map(trader => (
-              
               <StockItem key={trader.id}>
                 <Link to={`/trader/${trader.id}`}>
-                <Flex>
-                  <First>
-                  <p>Trader Name: {trader.cust.user.username}</p>
-                  <p>Contact: {trader.cust.phone}</p>
-                  </First>
-                  <Second>
-                  <p>Balance(Profit/loss) : ${trader.cust.balance}</p>
-                  <p>reach: {trader.clients.length}</p>
-                  </Second>
-                </Flex>
+                  <Flex>
+                    <First>
+                      <p>Trader Name: {trader.cust.user.username}</p>
+                      <p>Contact: {trader.cust.phone}</p>
+                    </First>
+                    <Second>
+                      <p>Balance(Profit/loss) : ${trader.cust.balance}</p>
+                      <p>reach: {trader.clients.length}</p>
+                    </Second>
+                  </Flex>
                 </Link>
               </StockItem>
             ))}
@@ -77,20 +73,19 @@ const MyTradersPortfolio = () => {
             {clients.map(client => (
               <StockItem key={client.id}>
                 <Flex>
-                 
-                <Link to={`/trader/client/${client.id}`}>
-                <First>              
-                <></>
-                <p>Client: {client.user.username}</p>
-                <p>Amount: {client.balance}</p>
-                </First>
-                </Link>
-                <Second>
-                <p>Contact: {client.phone}</p>
-                <CustomButton>Release</CustomButton>
-                </Second>
+                  <Link to={`/trader/client/${client.id}`}>
+                    <First>
+                      <>
+                        <p>Client: {client.user.username}</p>
+                        <p>Amount: {client.balance}</p>
+                      </>
+                    </First>
+                  </Link>
+                  <Second>
+                    <p>Contact: {client.phone}</p>
+                    <CustomButton>Release</CustomButton>
+                  </Second>
                 </Flex>
-                {/* Add other portfolio details here */}
               </StockItem>
             ))}
           </ItemContainer>
@@ -99,7 +94,7 @@ const MyTradersPortfolio = () => {
         <ThirdComponent>
           <ItemContainer>
             <h2>My Balance: ${account?.balance}</h2>
-           <BalanceForm/>
+            <BalanceForm/>
           </ItemContainer>
         </ThirdComponent>
       </Wrapper>

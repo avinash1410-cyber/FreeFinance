@@ -4,41 +4,9 @@ import Announcement from "../components/Announcement";
 import React, { useState, useEffect } from 'react';
 import Stocks from '../components/Stocks';
 
-
-
-// const useStyles = makeStyles((theme) => ({
-//   addToWatchlist: {
-//     color: theme.palette.getContrastText(theme.palette.success.main),
-//     backgroundColor: theme.palette.success.main,
-//     '&:hover': {
-//       backgroundColor: theme.palette.success.dark,
-//     },
-//   },
-
-//   buyButton: {
-//     color: theme.palette.getContrastText(theme.palette.success.main),
-//     backgroundColor: theme.palette.success.main,
-//     '&:hover': {
-//       backgroundColor: theme.palette.success.dark,
-//     },
-//   },
-//   sellButton: {
-//     color: theme.palette.getContrastText(theme.palette.error.main),
-//     backgroundColor: theme.palette.error.main,
-//     '&:hover': {
-//       backgroundColor: theme.palette.error.dark,
-//     },
-//   },
-// }));
-
-
-
-
 export default function StockList() {
   const [stocks, setStocks] = useState([]);
-  // const classes = useStyles();
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -62,7 +30,6 @@ export default function StockList() {
     fetchData();
   }, []);
 
-
   return (
     <>
       <ProtectedPage />
@@ -71,7 +38,8 @@ export default function StockList() {
       <h1>
         <center>Here is The list of Stocks</center>
       </h1>
-      <Stocks></Stocks>
+      {/* Rendering the Stocks component */}
+      <Stocks stocks={stocks} loading={loading} />
     </>
   );
 }

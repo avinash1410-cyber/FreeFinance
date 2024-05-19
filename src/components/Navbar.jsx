@@ -84,7 +84,7 @@ const Navbar = () => {
     if (anchorEl) {
       fetchNotifications();
     }
-  }, [anchorEl]);
+  }, [anchorEl, fetchNotifications]); // Include fetchNotifications in the dependency array
 
   const fetchNotifications = async () => {
     setLoading(true);

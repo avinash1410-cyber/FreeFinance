@@ -31,41 +31,46 @@ const Stocks = () => {
   const [client_id, setClientId] = useState(null);
 
   useEffect(() => {
-    async function fetchStocks() {
+    const fetchStocks = async () => {
       try {
         const data = await hitRequest('https://avi8654340.pythonanywhere.com/stock/');
         setStocks(data);
       } finally {
         setLoading(false);
       }
-    }
+    };
+
     fetchStocks();
-  }, []);
+  }, [hitRequest]);
 
-  const handleOpenPopup = (stockId, type) => {
-    setSelectedStock(stockId);
-    setActionType(type);
-    console.log(type);
-    setOpenPopup(true);
-  
-    // Extract client ID from the URL
-    const parts = location.pathname.split('/');
-    const idIndex = parts.indexOf('client') + 1;
-  
-    // Check if 'client' exists in the URL and the next part is a number
-    if (idIndex !== 0 && !isNaN(parts[idIndex])) {
-      const clientId = parts[idIndex];
-      setClientId(clientId);
-      console.log(clientId);
-    } else {
-      // If 'client' doesn't exist or the next part is not a number, set clientId to null or handle the situation accordingly
-      setClientId(null);
-      console.log("Client ID not found in the URL");
-    }
-  };
-  
+  useEffect(() => {
+    const handleOpenPopup = (stockId, type) => {
+      setSelectedStock(stockId);
+      setActionType(type);
+      console.log(type);
+      setOpenPopup(true);
+    
+      // Extract client ID from the URL
+      const parts = location.pathname.split('/');
+      const idIndex = parts.indexOf('client') + 1;
+    
+      // Check if 'client' exists in the URL and the next part is a number
+      if (idIndex !== 0 && !isNaN(parts[idIndex])) {
+        const clientId = parts[idIndex];
+        setClientId(clientId);
+        console.log(clientId);
+      } else {
+        // If 'client' doesn't exist or the next part is not a number, set clientId to null or handle the situation accordingly
+        setClientId(null);
+        console.log("Client ID not found in the URL");
+      }
+    };
 
-  
+    return () => {
+      setOpenPopup(false);
+    };
+  }, [location.pathname]);
+
   const handleClosePopup = () => {
     setOpenPopup(false);
   };

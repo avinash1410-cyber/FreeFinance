@@ -21,17 +21,10 @@ import MyTradersPortfolio from "./pages/Trader_Portfolio";
 import MyStocks from "./pages/MyStocks";
 import ClientProfile from "./pages/ClientPage";
 import SearchResult from "./components/SearchResult";
-import axios from "axios";
 import Indexes from "./components/indexes";
 
-
-
-
-
-
-
 const App = () => {
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults] = useState(null);
 
   return (
     <BrowserRouter>
@@ -54,7 +47,6 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/test" element={<MyComponent />} />
           <Route path="/indexes" element={<Indexes />} />
-          
         </Routes>
       </AuthProvider>
     </BrowserRouter>

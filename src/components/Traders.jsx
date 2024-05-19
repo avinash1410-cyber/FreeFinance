@@ -8,12 +8,6 @@ import styled from 'styled-components';
 import { StockItem, ItemContainer } from '../components/Items';
 import { BlackBox } from '../pages/ViewStock';
 
-
-
-
-// Styled component for the container
-
-
 // Styled component for the flex container
 const Flex = styled.div`
   display: flex;
@@ -21,26 +15,22 @@ const Flex = styled.div`
   justify-content: space-between;
 `;
 
-
-
-
-
 const Traders = () => {
   const [traders, setTraders] = useState([]);
   const [loading, setLoading] = useState(true);
   const { hitRequest } = useApiRequest();
 
   useEffect(() => {
-    async function fetchTraders() {
+    const fetchTraders = async () => {
       try {
         const data = await hitRequest('https://avi8654340.pythonanywhere.com/trader/');
         setTraders(data);
       } finally {
         setLoading(false);
       }
-    }
+    };
     fetchTraders();
-  }, []);
+  }, [hitRequest]); // Include hitRequest in the dependency array
 
   const handleOpen = async (traderId) => {
     try {
@@ -52,7 +42,6 @@ const Traders = () => {
     }
   };
 
-
   return (
     <Flex>
       {loading ? (
@@ -61,21 +50,21 @@ const Traders = () => {
         traders.map((trader) => (
           <ItemContainer key={trader.id}>
             <center>
-            <BlackBox>
-              <StockItem>
-                <Link to={`/trader/${trader.id}`}>
-                  <div>
-                    <p>Name: {trader.cust.user.username}</p>
-                    <p>Phone: {trader.cust.phone}</p>
-                    <p>Address: {trader.cust.add}</p>
-                  </div>
-                </Link>
-              </StockItem>
+              <BlackBox>
+                <StockItem>
+                  <Link to={`/trader/${trader.id}`}>
+                    <div>
+                      <p>Name: {trader.cust.user.username}</p>
+                      <p>Phone: {trader.cust.phone}</p>
+                      <p>Address: {trader.cust.add}</p>
+                    </div>
+                  </Link>
+                </StockItem>
               </BlackBox>
             </center>
             <center>
-            <BlackBox>
-              <CustomButton onClick={() => handleOpen(trader.id)}>Hire</CustomButton>
+              <BlackBox>
+                <CustomButton onClick={() => handleOpen(trader.id)}>Hire</CustomButton>
               </BlackBox>
             </center>
           </ItemContainer>
@@ -84,4 +73,5 @@ const Traders = () => {
     </Flex>
   );
 };
+
 export default Traders;

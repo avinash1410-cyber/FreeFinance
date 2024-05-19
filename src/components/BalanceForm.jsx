@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Form, Input, Button } from './Helpers2';
 import useAxios from "../utils/useAxios";
@@ -9,26 +9,26 @@ const BalanceForm = () => {
   const [balance, setBalance] = useState(0);
   const api = useAxios();
 
-  useEffect(() => {
-    // Fetch balance data initially
-    fetchBalance();
-  }, [fetchBalance]);
-
-  const fetchBalance = async () => {
+  const fetchBalance = useCallback(async () => {
     try {
       const response = await api.get("https://avi8654340.pythonanywhere.com/account/");
       setBalance(response.data.balance);
     } catch (error) {
       console.error('Error fetching balance:', error);
     }
-  };
+  }, [api]);
+
+  useEffect(() => {
+    // Fetch balance data initially
+    fetchBalance();
+  }, [fetchBalance]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (transactionType === 'deposit') {
       console.log('Deposit:', amount);
       try {
-        const orderResponse = await api.post("https://avi8654340.pythonanywhere.com/account/addBalance/", {"amount":amount});
+        const orderResponse = await api.post("https://avi8654340.pythonanywhere.com/account/addBalance/", { "amount": amount });
         console.log("Order data:", orderResponse.data);
         // Update balance after successful request
         fetchBalance();
@@ -38,7 +38,7 @@ const BalanceForm = () => {
     } else {
       console.log('Withdraw:', amount);
       try {
-        const orderResponse = await api.post("https://avi8654340.pythonanywhere.com/account/withdrawBalance/", {"amount":amount});
+        const orderResponse = await api.post("https://avi8654340.pythonanywhere.com/account/withdrawBalance/", { "amount": amount });
         console.log("Order data:", orderResponse.data);
         // Update balance after successful request
         fetchBalance();
@@ -60,12 +60,14 @@ const BalanceForm = () => {
       />
       <ButtonContainer>
         <StyledButton
+          type="button"
           onClick={() => setTransactionType('withdraw')}
           active={transactionType === 'withdraw'}
         >
           Withdraw
         </StyledButton>
         <StyledButton
+          type="button"
           onClick={() => setTransactionType('deposit')}
           active={transactionType === 'deposit'}
         >
