@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams,useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import axios from "axios";
 import useAxios from '../utils/useAxios';
 import { CircularProgress } from "@material-ui/core";
@@ -8,9 +7,6 @@ import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
 import CustomButton from '../components/Button';
-import { Flex, Item, ItemContainer, StockItem } from '../components/Items';
-import { First } from '../components/Helpers2';
-import { Second } from './Portfolio';
 import { BlackBox,BlackBox2,Graph,Bar,Text,Container,BlackBox3 } from './ViewStock';
 
 

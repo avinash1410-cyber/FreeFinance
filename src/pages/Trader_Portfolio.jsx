@@ -6,7 +6,6 @@ import Announcement from "../components/Announcement";
 import { Wrapper, FirstComponent, SecondComponent, ThirdComponent, StockItem, ItemContainer } from '../components/Items';
 import { First,Flex } from '../components/Helpers2';
 import { Second } from './Portfolio';
-import { Button } from '@material-ui/core';
 import CustomButton from '../components/Button';
 import BalanceForm from '../components/BalanceForm';
 import { Link } from 'react-router-dom';

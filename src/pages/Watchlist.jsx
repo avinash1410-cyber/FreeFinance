@@ -7,7 +7,7 @@ import Announcement from "../components/Announcement";
 import { Wrapper, FirstComponent, SecondComponent, ThirdComponent, StockItem, ItemContainer,Scrollable } from '../components/Items';
 
 
-import { Second,First,Flex } from './Portfolio';
+
 
 import { BlackBox } from './ViewStock';
 import { Link } from 'react-router-dom';

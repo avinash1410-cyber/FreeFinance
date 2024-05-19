@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, {  useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../utils/useAxios";
-import AuthContext from "../context/AuthContext";
-import { AccountCircle } from '@mui/icons-material';
+
 import { Typography, Box, Menu, MenuItem, IconButton } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import styled from 'styled-components';
@@ -43,7 +42,6 @@ const StyledMenuItem = styled(MenuItem)`
 function ProtectedPage() {
   const [res, setRes] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user } = useContext(AuthContext);
   const api = useAxios();
   const navigate = useNavigate();
 

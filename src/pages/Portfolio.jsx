@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
 import { Wrapper, FirstComponent, SecondComponent, ThirdComponent, StockItem, ItemContainer } from '../components/Items';
 import { Link } from 'react-router-dom';
-import { Input } from '@material-ui/core';
 import BalanceForm from '../components/BalanceForm';
 import { First,Flex } from '../components/Helpers2';
 import styled from 'styled-components';

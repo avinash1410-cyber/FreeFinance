@@ -74,9 +74,8 @@ function ViewStock() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // const classes = useStyles();
-  const navigate = useNavigate();
-  const api=useAxios();
-  const { hitRequest } = useApiRequest();
+
+
   const [openPopup, setOpenPopup] = useState(false);
   const [selectedStock, setSelectedStock] = useState(null);
   const [actionType, setActionType] = useState(null);

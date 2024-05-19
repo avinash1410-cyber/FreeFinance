@@ -3,17 +3,11 @@ import styled from "styled-components";
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
-import { Link } from 'react-router-dom';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress } from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
-import CustomButton from '../components/Button';
 import Stocks from '../components/Stocks';
 
 
-const ListItem = styled.li`
-  margin-bottom: 10px;
-`;
 
 // const useStyles = makeStyles((theme) => ({
 //   addToWatchlist: {
@@ -44,14 +38,10 @@ const ListItem = styled.li`
 
 
 export default function StockList() {
-  const api = useAxios();
   const [stocks, setStocks] = useState([]);
   // const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [selectedStockId, setSelectedStockId] = useState(null); // State to store the selected stock ID
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     async function fetchData() {
