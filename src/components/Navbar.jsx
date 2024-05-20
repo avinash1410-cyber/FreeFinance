@@ -80,12 +80,7 @@ const Navbar = () => {
   const { logoutUser } = useContext(AuthContext);
   const api = useAxios();
 
-  useEffect(() => {
-    if (anchorEl) {
-      fetchNotifications();
-    }
-  }, [anchorEl, fetchNotifications]); // Include fetchNotifications in the dependency array
-
+  // Define fetchNotifications function before useEffect
   const fetchNotifications = async () => {
     setLoading(true);
     try {
@@ -97,6 +92,12 @@ const Navbar = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (anchorEl) {
+      fetchNotifications();
+    }
+  }, [anchorEl]); // Remove fetchNotifications from dependency array
 
   const handleSearch = async (e) => {
     e.preventDefault();
