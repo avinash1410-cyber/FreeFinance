@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useAxios from '../utils/useAxios';
 import ProtectedPage from "../views/ProtectedPage";
 import Navbar from "../components/Navbar";
 import Announcement from "../components/Announcement";
 import { Wrapper, FirstComponent, SecondComponent, ThirdComponent, StockItem, ItemContainer } from '../components/Items';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BalanceForm from '../components/BalanceForm';
 import { First, Flex } from '../components/Helpers2';
 import styled from 'styled-components';
 import CustomButton from '../components/Button';
 import { Scrollable } from '../components/Items';
-import { useNavigate } from 'react-router-dom';
 
 export const Second = styled.div`
   flex: 1;
@@ -32,29 +31,29 @@ const Portfolio = () => {
   const navigate = useNavigate();
   const [hiredTraders, setHiredTraders] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [orderResponse, tradersResponse, accountResponse] = await Promise.all([
-          api.get("https://avi8654340.pythonanywhere.com/account/my_stocks/"),
-          api.get("https://avi8654340.pythonanywhere.com/account/hires_list/"),
-          api.get("https://avi8654340.pythonanywhere.com/account/")
-        ]);
-        console.log("Order data:", orderResponse.data);
-        console.log("Traders data:", tradersResponse.data);
-        console.log("Account data:", accountResponse.data);
+  const fetchData = useCallback(async () => {
+    try {
+      const [orderResponse, tradersResponse, accountResponse] = await Promise.all([
+        api.get("https://avi8654340.pythonanywhere.com/account/my_stocks/"),
+        api.get("https://avi8654340.pythonanywhere.com/account/hires_list/"),
+        api.get("https://avi8654340.pythonanywhere.com/account/")
+      ]);
+      console.log("Order data:", orderResponse.data);
+      console.log("Traders data:", tradersResponse.data);
+      console.log("Account data:", accountResponse.data);
 
-        // Set state accordingly
-        setOrders(orderResponse.data);
-        setTraders(tradersResponse.data);
-        setAccount(accountResponse.data)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+      // Set state accordingly
+      setOrders(orderResponse.data);
+      setTraders(tradersResponse.data);
+      setAccount(accountResponse.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
+  }, [api]);
 
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // Example usage of account variable
   useEffect(() => {

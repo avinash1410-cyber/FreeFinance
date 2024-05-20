@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Badge, Button, Popover, Typography, List, ListItem, ListItemText } from '@mui/material';
 import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
@@ -80,8 +80,8 @@ const Navbar = () => {
   const { logoutUser } = useContext(AuthContext);
   const api = useAxios();
 
-  // Define fetchNotifications function before useEffect
-  const fetchNotifications = async () => {
+  // Memoize fetchNotifications with useCallback
+  const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.get('https://avi8654340.pythonanywhere.com/account/notifications/');
@@ -91,13 +91,13 @@ const Navbar = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [api]);
 
   useEffect(() => {
     if (anchorEl) {
       fetchNotifications();
     }
-  }, [anchorEl]); // Remove fetchNotifications from dependency array
+  }, [anchorEl, fetchNotifications]); // Include fetchNotifications in the dependency array
 
   const handleSearch = async (e) => {
     e.preventDefault();

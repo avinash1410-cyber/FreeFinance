@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Chart from 'chart.js/auto';
 
@@ -61,7 +61,7 @@ const TopMarket = () => {
     setCurrentPage(page);
   };
 
-  const renderGraphs = () => {
+  const renderGraphs = useCallback(() => {
     indexesData.forEach((index, indexKey) => {
       const graphCanvas = document.getElementById(`graph-${indexKey}`);
       if (graphCanvas) {
@@ -87,7 +87,7 @@ const TopMarket = () => {
         });
       }
     });
-  };
+  }, [indexesData]);
 
   useEffect(() => {
     renderGraphs();
