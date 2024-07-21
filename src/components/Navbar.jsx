@@ -158,7 +158,7 @@ const Navbar = () => {
           </form>
         </Left>
         <Center>
-          <Link to="/"><Logo>Social Trading</Logo></Link>
+          <Link to="/"><Logo>Free Finance</Logo></Link>
         </Center>
         <Right>
           {menuItems.map((item, index) => (
