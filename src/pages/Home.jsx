@@ -1,53 +1,103 @@
-import React from "react";
-import Footer from "../components/Footer";
-import Newsletter from "../components/Newsletter";
-import Slider from "../components/Slider";
-import { useContext } from "react";
-import AuthContext from "../context/AuthContext";
-import ProtectedPage from "../views/ProtectedPage";
-import Navbar from "../components/Navbar";
-import Announcement from "../components/Announcement";
-import HomeStocks from "../components/HomeStocks";
-import HomeTraders from "../components/HomeTraders";
-import { Link } from "../components/Helpers";
-import { useNavigate } from "react-router-dom";
-import HomeIndexes from "../components/HomeIndexes"; // Renamed to follow PascalCase convention
-import HomeCategories from "../components/HomeCategories";
-import TopMarket from "../components/TopMarket";
+import React, { useEffect, useState } from 'react';
+import SearchBar from '../components/SearchBar';
+import Card from '../components/Card';
+import Card2 from '../components/Card2';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const Home = () => {
-  const { user } = useContext(AuthContext);
-  const handleNavigation = useNavigate();
-  console.log(user);
+
+function Home() {
+  const [allData, setAllData] = useState({});
+  const [latestArticle, setLatestArticle] = useState(null);
+  const [example, setExample] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('https://dashboard-1-7drh.onrender.com/');
+      const exampleData = Array.isArray(response.data) ? response.data.slice(0, 5) : [];
+      setExample(exampleData);
+
+      const latestArticleData = Array.isArray(response.data) ? response.data[response.data.length - 1] : null;
+      setLatestArticle(latestArticleData);
+
+    } catch (error) {
+      console.error('Error fetching all data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('https://dashboard-1-7drh.onrender.com/api/dashboard/');
+      setAllData(response.data);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
   return (
-    <div>
-      <ProtectedPage />
-      <Announcement />
-      <Navbar />
-      <Slider />
-      <HomeIndexes /> {/* Corrected component name */}
-      <Link
-        onClick={() => handleNavigation("/stocks/")}
-        style={{ fontWeight: "bold" }}
-      >
-        ALL STOCKS
-      </Link>
-      <HomeStocks />
-      <Link
-        onClick={() => handleNavigation("/traders/")}
-        style={{ fontWeight: "bold" }}
-      >
-        ALL TRADERS
-      </Link>
-      <HomeTraders />
-      <span style={{ fontWeight: "bold" }}>Top Sectors</span>
-      <HomeCategories />
-      <span style={{ fontWeight: "bold" }}>Top by Market Cap</span>
-      <TopMarket />
-      <Newsletter />
-      <Footer />
-    </div>
+    <>
+      <div>Home</div>
+      <SearchBar />
+      <div className="flex flex-wrap justify-center">
+        <Card
+          title="Total Items"
+          content={`Total No of Items: ${allData.total_items || 'N/A'}`}
+          target="/articles"
+        />
+
+        {latestArticle && (
+          <Card
+            title="Latest Article"
+            content={latestArticle.title || 'No title available'}
+            id={latestArticle.id}
+            target={`/details/${latestArticle.id}`}
+          />
+        )}
+      </div>
+
+      <div className="flex flex-wrap justify-center">
+        {example.map((item, index) => (
+          
+          <>
+            <Link
+                    to={`/details/${item.id}`}
+                    className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                >
+                    View Details →
+            </Link>
+
+          <Card2
+            key={index}
+            title={`Example Data ${index + 1}`}
+            content={{
+              "Title": item.title || 'N/A',
+              "Sector": item.sector || 'N/A',
+              "Topic": item.topic || 'N/A',
+              "Country": item.country || 'N/A',
+              "Relevance": item.relevance || 'N/A',
+              "Likelihood": item.likelihood || 'N/A',
+            }}
+          />
+           
+          </>
+        ))}
+      </div>
+    </>
   );
-};
+}
 
 export default Home;
